@@ -1,1 +1,152 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VEX | SİBER İSTİHBARAT & KODLAMA MERKEZİ</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            background-color: #02040a;
+            color: #00ff66;
+            font-family: 'Courier New', Courier, monospace;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+        header {
+            text-align: center;
+            margin-top: 20px;
+            margin-bottom: 25px;
+            border-bottom: 1px dashed #00ff66;
+            padding-bottom: 15px;
+        }
+        h1 {
+            color: #00ff66;
+            font-size: 1.8rem;
+            text-shadow: 0 0 10px rgba(0, 255, 102, 0.6);
+            letter-spacing: 2px;
+        }
+        p.subtitle {
+            color: #ff3333;
+            font-size: 0.85rem;
+            margin-top: 5px;
+            text-transform: uppercase;
+        }
+        .container {
+            max-width: 650px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .card {
+            background-color: #0a0f1d;
+            border: 1px solid #00ff66;
+            border-radius: 4px;
+            padding: 15px;
+            box-shadow: 0 0 12px rgba(0, 255, 102, 0.1);
+        }
+        .card h2 {
+            color: #33ccff;
+            font-size: 1rem;
+            margin-bottom: 8px;
+            border-left: 3px solid #33ccff;
+            padding-left: 6px;
+        }
+        .card p {
+            color: #c0c0c0;
+            font-size: 0.82rem;
+            line-height: 1.4;
+            margin-bottom: 8px;
+        }
+        .terminal {
+            background-color: #000000;
+            border: 1px dashed #ff3333;
+            padding: 10px;
+            border-radius: 4px;
+            color: #00ff66;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.78rem;
+            margin-top: 8px;
+        }
+        .code-box {
+            background-color: #0d1117;
+            border-left: 3px solid #ffcc00;
+            padding: 10px;
+            color: #e6edf3;
+            font-size: 0.78rem;
+            margin-top: 8px;
+            overflow-x: auto;
+        }
+        .blink {
+            animation: blinker 1s linear infinite;
+        }
+        @keyframes blinker {
+            50% { opacity: 0; }
+        }
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #555;
+            font-size: 0.7rem;
+        }
+    </style>
+</head>
+<body>
 
+    <header>
+        <h1>[ VEX // OPS-CENTRAL ]</h1>
+        <p class="subtitle">Siber İstihbarat, Savunma & Kodlama Akademi</p>
+    </header>
+
+    <div class="container">
+        <!-- Durum Paneli -->
+        <div class="card">
+            <h2>🛡️ OPERASYONEL DURUM</h2>
+            <p>Ağ trafiği şifreli tüneller üzerinden korunuyor. Sistem analitiği aktif olarak çalışmaktadır.</p>
+            <div class="terminal">
+                root@vex-system:~# security-check --full<br>
+                > Firewall: AKTİF [OK]<br>
+                > İz Sürme Kalkanı: DEVREDE<br>
+                > Durum: GİZLİ REHBER <span class="blink">_</span>
+            </div>
+        </div>
+
+        <!-- Kod Öğreten / Bilgi Veren Bölüm -->
+        <div class="card">
+            <h2>💡 GÜNÜN KODLAMA & GÜVENLİK İPUCU</h2>
+            <p>Yazılım ve siber güvenlikte ustalaşmak için küçük adımlar şarttır. İşte bugünün notu:</p>
+            <div class="code-box">
+                // Linux / Terminal Temelleri<br>
+                <strong>ping hedefip</strong> -> Hedef sistemin aktif olup olmadığını test eder.<br>
+                <strong>nmap -sV</strong> -> Hedef sistemdeki açık portları ve servisleri tarar.<br>
+                <strong>git push</strong> -> Kodlarını buluta ve internete güvenle gönderir.
+            </div>
+        </div>
+
+        <!-- Odak Alanları -->
+        <div class="card">
+            <h2>🎯 EĞİTİM VE PROJE HEDEFLERİ</h2>
+            <p>• Sıfırdan İleri Düzeye Mobil Kodlama<br>
+            • Sızma Testleri ve Ağ Trafiği Analizi<br>
+            • Otomatik Savunma Botları ve Discord Entegrasyonları<br>
+            • Güvenli Veri Saklama ve Şifreleme Algoritmaları</p>
+        </div>
+
+        <!-- Uyarı Paneli -->
+        <div class="card">
+            <h2>⚠️ GÜVENLİK UYARISI</h2>
+            <p>Bu platform eğitim, yazılım geliştirme ve siber güvenlik farkındalığı oluşturmak amacıyla kurulmuştur. Tüm hakları saklıdır.</p>
+        </div>
+    </div>
+
+    <footer>
+        <p>SECURE TERMINAL // 2026 VEX SECURITY GROUP</p>
+    </footer>
+
+</body>
+</html>
