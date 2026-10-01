@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CyberCode Studio - Kodla, Öğren, Güvenliği Keşfet</title>
+    <title>VEXcode Studio - Kodla, Öğren, Güvenliği Keşfet</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -71,7 +71,7 @@
                 <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 to-indigo-600 flex items-center justify-center glow-effect">
                     <i class="fa-solid fa-terminal text-black font-bold text-lg"></i>
                 </div>
-                <span class="font-bold text-xl tracking-wider bg-gradient-to-r from-cyan-400 to-indigo-400 bg-clip-text text-transparent">CyberCode</span>
+                <span class="font-bold text-xl tracking-wider bg-gradient-to-r from-cyan-400 to-indigo-400 bg-clip-text text-transparent">VEXcode</span>
             </div>
             
             <!-- Masaüstü Sekmeler -->
@@ -126,7 +126,7 @@
                         Kod yaz. Öğren. <span class="bg-gradient-to-r from-cyan-400 to-indigo-400 bg-clip-text text-transparent">Güvenliği keşfet.</span>
                     </h1>
                     <p class="text-slate-300 text-base sm:text-lg">
-                        Yazılım geliştirme sanatını öğrenirken siber dünyanın gizli kalmış açıklarını ve savunma stratejilerini interaktif simülasyonlarla keşfet.
+                        Yazılım geliştirme sanatını öğrenirken siber dünyanın gizli kalmış açıklarını ve savunma stratejilerini VEXcode ile interaktif simülasyonlarla keşfet.
                     </p>
                     <div class="pt-2 flex flex-wrap gap-4">
                         <button onclick="switchTab('lab')" class="px-6 py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 text-black font-semibold hover:opacity-95 transition flex items-center space-x-2 shadow-lg shadow-cyan-500/20">
@@ -281,7 +281,7 @@
                         </p>
                         <div class="p-3 bg-slate-900/80 rounded-xl border border-slate-800 font-code text-xs text-cyan-300">
                             # Örnek sözdizimi<br>
-                            isim = "Eray"<br>
+                            isim = "VEX"<br>
                             yas = 25
                         </div>
                     </div>
@@ -309,7 +309,7 @@
                                 <span class="text-xs font-code text-slate-400">main.py</span>
                                 <span class="text-xs text-emerald-400"><i class="fa-solid fa-circle text-[8px] mr-1"></i>Hazır</span>
                             </div>
-                            <textarea id="lang-code-input" class="w-full bg-transparent p-4 font-code text-sm text-cyan-300 focus:outline-none resize-none h-32">isim = "Eray"
+                            <textarea id="lang-code-input" class="w-full bg-transparent p-4 font-code text-sm text-cyan-300 focus:outline-none resize-none h-32">isim = "VEX"
 print("Merhaba " + isim)</textarea>
                         </div>
                     </div>
@@ -450,7 +450,7 @@ print("Merhaba " + isim)</textarea>
                             <span class="text-xs text-slate-400">İnteraktif Konsol</span>
                         </div>
                         <textarea id="lab-textarea" class="w-full bg-slate-950 p-4 rounded-xl border border-cyber-border font-code text-sm text-cyan-300 focus:outline-none resize-none h-64"># Kodunu buraya yaz ve çalıştır
-isim = "CyberCoder"
+isim = "VEXcoder"
 print("Sisteme hoş geldin, " + isim + "!")
 yas = 20
 if yas >= 18:
@@ -565,7 +565,7 @@ else:
 
     <!-- Alt Bilgi (Footer) -->
     <footer class="mt-auto border-t border-cyber-border bg-cyber-dark py-6 text-center text-xs text-slate-500">
-        <p>&copy; 2026 CyberCode Studio. Kodla, Öğren, Güvenliği Keşfet. Tüm hakları saklıdır.</p>
+        <p>&copy; 2026 VEXcode Studio. Kodla, Öğren, Güvenliği Keşfet. Tüm hakları saklıdır.</p>
     </footer>
 
     <!-- JavaScript Mantığı -->
@@ -600,7 +600,7 @@ else:
             python: {
                 title: "Python Temelleri",
                 desc: "Değişkenler, verileri hafızada saklamak için kullanılan kutular gibidir. Python'da değişken tanımlamak için özel bir anahtar kelimeye gerek yoktur.",
-                code: 'isim = "Eray"\nprint("Merhaba " + isim)',
+                code: 'isim = "VEX"\nprint("Merhaba " + isim)',
                 icon: 'fa-brands fa-python',
                 color: 'text-yellow-400',
                 bg: 'bg-yellow-500/10'
@@ -624,7 +624,7 @@ else:
             js: {
                 title: "JavaScript Temelleri",
                 desc: "JavaScript, web sayfalarına dinamik davranış ve etkileşim katan programlama dilidir.",
-                code: 'const ogrenci = "Eray";\nconsole.log("Hoş geldin " + ogrenci);',
+                code: 'const ogrenci = "VEX";\nconsole.log("Hoş geldin " + ogrenci);',
                 icon: 'fa-brands fa-js',
                 color: 'text-yellow-300',
                 bg: 'bg-yellow-400/10'
@@ -715,12 +715,12 @@ else:
                 pyBtn.className = "px-4 py-2 rounded-xl text-xs font-semibold bg-cyan-500/20 text-cyan-400 border border-cyan-500/30";
                 jsBtn.className = "px-4 py-2 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300 border border-slate-700";
                 filename.innerText = "workspace.py";
-                textarea.value = '# Python Kod Laboratuvarı\nisim = "CyberCoder"\nprint("Merhaba, " + isim)';
+                textarea.value = '# Python Kod Laboratuvarı\nisim = "VEXcoder"\nprint("Merhaba, " + isim)';
             } else {
                 jsBtn.className = "px-4 py-2 rounded-xl text-xs font-semibold bg-cyan-500/20 text-cyan-400 border border-cyan-500/30";
                 pyBtn.className = "px-4 py-2 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300 border border-slate-700";
                 filename.innerText = "workspace.js";
-                textarea.value = '// JavaScript Kod Laboratuvarı\nconst isim = "CyberCoder";\nconsole.log("Merhaba, " + isim);';
+                textarea.value = '// JavaScript Kod Laboratuvarı\nconst isim = "VEXcoder";\nconsole.log("Merhaba, " + isim);';
             }
             document.getElementById('lab-output-box').innerHTML = '<span class="text-slate-500">Dil değiştirildi. Kodu çalıştırmaya hazırsınız...</span>';
             document.getElementById('lab-hint-box').classList.add('hidden');
@@ -733,7 +733,7 @@ else:
             // Simüle edilmiş konsol çıktısı
             outputBox.innerHTML = `
                 <div class="text-slate-400">$ running ${currentLabLang === 'python' ? 'python3 main.py' : 'node workspace.js'}</div>
-                <div class="text-emerald-400 mt-1">Merhaba, CyberCoder!</div>
+                <div class="text-emerald-400 mt-1">Merhaba, VEXcoder!</div>
                 <div class="text-cyan-400 mt-1">Erişim onaylandı: Tam yetkili kullanıcı.</div>
                 <div class="text-slate-500 mt-2">[İşlem 0.04 saniyede tamamlandı - Exit Code: 0]</div>
             `;
@@ -745,4 +745,4 @@ else:
         }
     </script>
 </body>
-</html>
+    </html>
