@@ -1,10 +1,11 @@
+```html
 <!DOCTYPE html>
 <html lang="tr" class="dark">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VEXcode Studio - Kodla, Öğren, Güvenliği Keşfet</title>
-    <!-- Tailwind CSS CDN -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>VEXcode AI | Yapay Zeka & Bilimsel Bilgi Asistanı</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -12,14 +13,15 @@
             theme: {
                 extend: {
                     colors: {
-                        cyber: {
-                            dark: '#0a0f1d',
-                            card: '#131b31',
-                            border: '#1e2942',
-                            neon: '#00f2fe',
-                            purple: '#7928ca',
-                            green: '#10b981',
-                            pink: '#ff007f'
+                        vex: {
+                            50: '#f0f4ff',
+                            100: '#e0e8ff',
+                            400: '#818cf8',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            900: '#0f172a',
+                            950: '#070a14'
                         }
                     }
                 }
@@ -28,721 +30,552 @@
     </script>
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Marked.js for Markdown Rendering -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <!-- Highlight.js for Syntax Highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #0a0f1d;
-            color: #f8fafc;
-        }
-        .font-code {
-            font-family: 'Fira Code', monospace;
-        }
-        /* Custom scrollbar */
+        /* Custom Scrollbar */
         ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
+            width: 6px;
+            height: 6px;
         }
         ::-webkit-scrollbar-track {
-            background: #0a0f1d;
+            background: rgba(15, 23, 42, 0.6);
         }
         ::-webkit-scrollbar-thumb {
-            background: #1e2942;
+            background: rgba(99, 102, 241, 0.3);
             border-radius: 4px;
         }
         ::-webkit-scrollbar-thumb:hover {
-            background: #00f2fe;
+            background: rgba(99, 102, 241, 0.6);
         }
+
+        /* Glassmorphism effects */
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.82);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .glass-input {
+            background: rgba(30, 41, 59, 0.85);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        /* Pulsing Glow Effect */
         .glow-effect {
-            box-shadow: 0 0 25px rgba(0, 242, 254, 0.15);
+            box-shadow: 0 0 25px -5px rgba(99, 102, 241, 0.35);
         }
-        .glow-purple {
-            box-shadow: 0 0 25px rgba(121, 40, 202, 0.2);
+
+        /* Markdown styling overrides inside chat */
+        .markdown-content p { margin-bottom: 0.75rem; line-height: 1.6; }
+        .markdown-content p:last-child { margin-bottom: 0; }
+        .markdown-content ul { list-style-type: disc; margin-left: 1.5rem; margin-bottom: 0.75rem; }
+        .markdown-content ol { list-style-type: decimal; margin-left: 1.5rem; margin-bottom: 0.75rem; }
+        .markdown-content code:not(pre code) {
+            background: rgba(99, 102, 241, 0.2);
+            color: #c7d2fe;
+            padding: 0.15rem 0.4rem;
+            border-radius: 0.25rem;
+            font-size: 0.875em;
+            font-family: monospace;
+        }
+        .markdown-content pre {
+            margin-top: 0.75rem;
+            margin-bottom: 0.75rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .markdown-content h1, .markdown-content h2, .markdown-content h3 {
+            font-weight: 700;
+            color: #f8fafc;
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+        }
+        .markdown-content h1 { font-size: 1.3rem; }
+        .markdown-content h2 { font-size: 1.15rem; }
+        .markdown-content h3 { font-size: 1.05rem; }
+        .markdown-content blockquote {
+            border-left: 4px solid #6366f1;
+            padding-left: 1rem;
+            color: #94a3b8;
+            font-style: italic;
+            margin: 0.75rem 0;
+        }
+        .markdown-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 0.75rem 0;
+        }
+        .markdown-content th, .markdown-content td {
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 0.5rem 0.75rem;
+            text-align: left;
+        }
+        .markdown-content th {
+            background: rgba(30, 41, 59, 0.8);
+        }
+
+        /* Smooth Mobile Keyboard Optimization */
+        html, body {
+            height: 100%;
+            overflow: hidden;
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col bg-cyber-dark text-slate-100 selection:bg-cyan-500 selection:text-black">
+<body class="bg-vex-950 text-slate-100 h-full flex flex-col font-sans antialiased selection:bg-indigo-500 selection:text-white">
 
-    <!-- Üst Navigasyon Menüsü -->
-    <header class="sticky top-0 z-50 bg-cyber-dark/80 backdrop-blur-md border-b border-cyber-border">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-            <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('home')">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 to-indigo-600 flex items-center justify-center glow-effect">
-                    <i class="fa-solid fa-terminal text-black font-bold text-lg"></i>
-                </div>
-                <span class="font-bold text-xl tracking-wider bg-gradient-to-r from-cyan-400 to-indigo-400 bg-clip-text text-transparent">VEXcode</span>
+    <!-- Üst Gezinme Çubuğu (Header) -->
+    <header class="h-16 border-b border-slate-800/80 glass-panel flex-shrink-0 z-30 flex items-center justify-between px-4 md:px-6">
+        <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-cyan-400 flex items-center justify-center shadow-lg shadow-indigo-500/20">
+                <i class="fa-solid text-xl text-white font-black">V</i>
             </div>
-            
-            <!-- Masaüstü Sekmeler -->
-            <nav class="hidden md:flex items-center space-x-1">
-                <button onclick="switchTab('home')" id="nav-home" class="nav-btn px-4 py-2 rounded-lg text-sm font-medium transition-all text-cyan-400 bg-cyan-500/10 border border-cyan-500/20"><i class="fa-solid fa-house mr-2"></i>Ana Sayfa</button>
-                <button onclick="switchTab('programming')" id="nav-programming" class="nav-btn px-4 py-2 rounded-lg text-sm font-medium transition-all text-slate-400 hover:text-white hover:bg-slate-800/50"><i class="fa-solid fa-code mr-2"></i>Programlama</button>
-                <button onclick="switchTab('security')" id="nav-security" class="nav-btn px-4 py-2 rounded-lg text-sm font-medium transition-all text-slate-400 hover:text-white hover:bg-slate-800/50"><i class="fa-solid fa-shield-halved mr-2"></i>Siber Güvenlik</button>
-                <button onclick="switchTab('lab')" id="nav-lab" class="nav-btn px-4 py-2 rounded-lg text-sm font-medium transition-all text-slate-400 hover:text-white hover:bg-slate-800/50"><i class="fa-solid fa-flask mr-2"></i>Kod Laboratuvarı</button>
-                <button onclick="switchTab('quests')" id="nav-quests" class="nav-btn px-4 py-2 rounded-lg text-sm font-medium transition-all text-slate-400 hover:text-white hover:bg-slate-800/50"><i class="fa-solid fa-trophy mr-2"></i>Görev Sistemi</button>
-            </nav>
-
-            <!-- Profil / Seviye Durumu -->
-            <div class="flex items-center space-x-3">
-                <div class="hidden sm:flex flex-col text-right">
-                    <span class="text-xs text-slate-400">Seviye 2 Gezgini</span>
-                    <span class="text-xs font-bold text-cyan-400">450 XP / 1000 XP</span>
+            <div>
+                <div class="flex items-center space-x-2">
+                    <span class="font-bold text-lg tracking-tight bg-gradient-to-r from-white via-slate-200 to-indigo-300 bg-clip-text text-transparent">VEXcode AI</span>
+                    <span class="text-[10px] font-semibold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 px-2 py-0.5 rounded-full uppercase tracking-wider">v3.0</span>
                 </div>
-                <div class="w-9 h-9 rounded-full bg-indigo-500/20 border border-indigo-500/40 flex items-center justify-center text-indigo-400 font-bold">
-                    <i class="fa-solid fa-user-astronaut"></i>
-                </div>
-                <!-- Mobil Menü Butonu -->
-                <button onclick="toggleMobileMenu()" class="md:hidden p-2 text-slate-400 hover:text-white">
-                    <i class="fa-solid fa-bars text-xl"></i>
-                </button>
+                <p class="text-[11px] text-slate-400 hidden sm:block">Ekip: Veyra, Lyra, Veylox & Aria</p>
             </div>
         </div>
 
-        <!-- Mobil Menü -->
-        <div id="mobile-menu" class="hidden md:hidden bg-cyber-card border-b border-cyber-border px-4 pt-2 pb-4 space-y-1">
-            <button onclick="switchTab('home'); toggleMobileMenu();" class="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-cyan-400 bg-cyan-500/10"><i class="fa-solid fa-house mr-2"></i>Ana Sayfa</button>
-            <button onclick="switchTab('programming'); toggleMobileMenu();" class="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-slate-300 hover:bg-slate-800"><i class="fa-solid fa-code mr-2"></i>Programlama</button>
-            <button onclick="switchTab('security'); toggleMobileMenu();" class="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-slate-300 hover:bg-slate-800"><i class="fa-solid fa-shield-halved mr-2"></i>Siber Güvenlik</button>
-            <button onclick="switchTab('lab'); toggleMobileMenu();" class="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-slate-300 hover:bg-slate-800"><i class="fa-solid fa-flask mr-2"></i>Kod Laboratuvarı</button>
-            <button onclick="switchTab('quests'); toggleMobileMenu();" class="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-slate-300 hover:bg-slate-800"><i class="fa-solid fa-trophy mr-2"></i>Görev Sistemi</button>
+        <!-- İşlem Butonları -->
+        <div class="flex items-center space-x-2.5">
+            <!-- Canlı İnternet / Bilim Araması Modu -->
+            <button id="toggleGroundingBtn" class="flex items-center space-x-2 px-3 py-1.5 rounded-xl border border-indigo-500/30 bg-indigo-950/40 text-indigo-300 hover:bg-indigo-900/50 transition text-xs font-medium">
+                <i class="fa-solid fa-globe text-cyan-400" id="groundingIcon"></i>
+                <span class="hidden sm:inline" id="groundingText">Canlı Bilim Araması: Açık</span>
+            </button>
+
+            <!-- Sohbet Temizle -->
+            <button id="clearChatBtn" class="p-2 text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 rounded-xl transition" title="Sohbeti Temizle">
+                <i class="fa-solid fa-trash-can text-sm"></i>
+            </button>
         </div>
     </header>
 
-    <!-- Ana İçerik Konteyneri -->
-    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Ana Sohbet ve İçerik Alanı -->
+    <main class="flex-1 flex flex-col max-w-5xl w-full mx-auto p-3 sm:p-4 overflow-hidden">
 
-        <!-- 1. ANA SAYFA SEKMESİ -->
-        <section id="tab-home" class="space-y-8">
-            <!-- Hero Banner -->
-            <div class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-indigo-900/40 via-cyber-card to-cyan-900/30 border border-cyber-border p-8 sm:p-12 glow-effect">
-                <div class="absolute -right-10 -bottom-10 w-80 h-80 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
-                <div class="relative z-10 max-w-2xl space-y-4">
-                    <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-xs font-semibold">
-                        <i class="fa-solid fa-bolt"></i>
-                        <span>Yeni Nesil Eğitim Platformu</span>
-                    </div>
-                    <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-white leading-tight">
-                        Kod yaz. Öğren. <span class="bg-gradient-to-r from-cyan-400 to-indigo-400 bg-clip-text text-transparent">Güvenliği keşfet.</span>
-                    </h1>
-                    <p class="text-slate-300 text-base sm:text-lg">
-                        Yazılım geliştirme sanatını öğrenirken siber dünyanın gizli kalmış açıklarını ve savunma stratejilerini VEXcode ile interaktif simülasyonlarla keşfet.
+        <!-- Bilgilendirme Kartı -->
+        <div id="introCard" class="glass-panel p-3.5 sm:p-4 rounded-2xl mb-3 relative overflow-hidden flex-shrink-0 transition-all duration-300">
+            <button onclick="document.getElementById('introCard').style.display='none'" class="absolute top-3 right-3 text-slate-400 hover:text-white p-1">
+                <i class="fa-solid fa-xmark text-sm"></i>
+            </button>
+            <div class="flex items-start sm:items-center gap-3">
+                <div class="p-2.5 bg-indigo-500/10 rounded-xl border border-indigo-500/20 text-indigo-400 flex-shrink-0">
+                    <i class="fa-solid fa-brain text-xl"></i>
+                </div>
+                <div class="pr-6">
+                    <h2 class="text-xs font-bold text-slate-200 uppercase tracking-wider mb-0.5">Bilimsel Yapay Zeka Motoru</h2>
+                    <p class="text-xs text-slate-400 leading-relaxed">
+                        Evren, kuantum fiziği, kodlama, matematik, tarih ve bilimsel olarak kanıtlanmış tüm konular hakkında dilediğin soruyu sorabilirsin!
                     </p>
-                    <div class="pt-2 flex flex-wrap gap-4">
-                        <button onclick="switchTab('lab')" class="px-6 py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 text-black font-semibold hover:opacity-95 transition flex items-center space-x-2 shadow-lg shadow-cyan-500/20">
-                            <i class="fa-solid fa-play"></i>
-                            <span>Hemen Kod Yaz</span>
-                        </button>
-                        <button onclick="switchTab('security')" class="px-6 py-3 rounded-xl bg-slate-800 border border-slate-700 text-white font-semibold hover:bg-slate-700 transition flex items-center space-x-2">
-                            <i class="fa-solid fa-shield-halved text-cyan-400"></i>
-                            <span>Siber Güvenliğe Başla</span>
-                        </button>
-                    </div>
                 </div>
             </div>
+        </div>
 
-            <!-- İlerleme ve Günlük Görev Kartları -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <!-- İlerleme Yüzdesi -->
-                <div class="bg-cyber-card border border-cyber-border rounded-2xl p-6 flex flex-col justify-between">
-                    <div>
-                        <div class="flex items-center justify-between mb-4">
-                            <span class="text-sm font-semibold text-slate-400">Genel İlerleme</span>
-                            <span class="text-cyan-400 font-bold text-lg">%45</span>
-                        </div>
-                        <div class="w-full bg-slate-800 rounded-full h-3 mb-4 overflow-hidden">
-                            <div class="bg-gradient-to-r from-cyan-500 to-indigo-500 h-3 rounded-full" style="width: 45%"></div>
-                        </div>
-                        <p class="text-xs text-slate-400">Harika gidiyorsun! Python Değişkenler ve Phishing Tespiti modüllerini tamamladın.</p>
-                    </div>
-                    <button onclick="switchTab('quests')" class="mt-4 text-xs font-semibold text-cyan-400 hover:text-cyan-300 flex items-center space-x-1">
-                        <span>Görevleri Görüntüle</span>
-                        <i class="fa-solid fa-arrow-right"></i>
+        <!-- Sohbet Mesaj Alanı -->
+        <div id="chatContainer" class="flex-1 glass-panel rounded-2xl p-3 sm:p-5 overflow-y-auto flex flex-col space-y-4">
+            
+            <!-- Karşılama Ekranı (İlk Açılışta) -->
+            <div id="emptyState" class="m-auto text-center py-6 px-4 max-w-lg">
+                <div class="w-16 h-16 rounded-2xl bg-indigo-600/20 border border-indigo-500/30 flex items-center justify-center mx-auto mb-4 text-indigo-400 glow-effect">
+                    <i class="fa-solid fa-atom text-3xl animate-spin-slow"></i>
+                </div>
+                <h3 class="text-lg font-bold text-white mb-1.5">Neyi keşfetmek istersiniz?</h3>
+                <p class="text-xs text-slate-400 mb-5">Aşağıdaki hazır konulardan birine tıklayabilir veya sorunuzu doğrudan yazabilirsiniz.</p>
+                
+                <!-- Örnek Soru Kartları -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-left">
+                    <button onclick="setPrompt('Kuantum dolaşıklık ilkesi nedir ve bilimsel olarak nasıl kanıtlanmıştır?')" class="p-3 rounded-xl bg-slate-800/60 border border-slate-700/60 hover:border-indigo-500/50 hover:bg-slate-800 transition text-xs flex items-center space-x-3 group">
+                        <i class="fa-solid fa-microscope text-indigo-400 group-hover:scale-110 transition"></i>
+                        <span class="text-slate-300">Kuantum Fiziği</span>
+                    </button>
+                    <button onclick="setPrompt('Python ile bir Yapay Sinir Ağı (Neural Network) mimarisi nasıl kodlanır?')" class="p-3 rounded-xl bg-slate-800/60 border border-slate-700/60 hover:border-indigo-500/50 hover:bg-slate-800 transition text-xs flex items-center space-x-3 group">
+                        <i class="fa-solid fa-code text-indigo-400 group-hover:scale-110 transition"></i>
+                        <span class="text-slate-300">Python Yapay Zeka Kodu</span>
+                    </button>
+                    <button onclick="setPrompt('Nükleer füzyon enerjisi ile ilgili ulaşılan son bilimsel gelişmeler nelerdir?')" class="p-3 rounded-xl bg-slate-800/60 border border-slate-700/60 hover:border-indigo-500/50 hover:bg-slate-800 transition text-xs flex items-center space-x-3 group">
+                        <i class="fa-solid fa-bolt text-indigo-400 group-hover:scale-110 transition"></i>
+                        <span class="text-slate-300">Nükleer Füzyon Çalışmaları</span>
+                    </button>
+                    <button onclick="setPrompt('Karadeliklerin iç yapısı ve olay ufku hakkında kanıtlanmış fizik teorileri nelerdir?')" class="p-3 rounded-xl bg-slate-800/60 border border-slate-700/60 hover:border-indigo-500/50 hover:bg-slate-800 transition text-xs flex items-center space-x-3 group">
+                        <i class="fa-solid fa-user-astronaut text-indigo-400 group-hover:scale-110 transition"></i>
+                        <span class="text-slate-300">Astrofizik & Karadelikler</span>
                     </button>
                 </div>
+            </div>
 
-                <!-- Günlük Görev -->
-                <div class="bg-cyber-card border border-cyber-border rounded-2xl p-6 flex flex-col justify-between">
-                    <div>
-                        <div class="flex items-center justify-between mb-3">
-                            <span class="text-xs px-2.5 py-1 rounded-md bg-emerald-500/10 text-emerald-400 font-semibold border border-emerald-500/20">Günlük Görev</span>
-                            <span class="text-xs text-slate-400"><i class="fa-regular fa-clock mr-1"></i>14 saat kaldı</span>
-                        </div>
-                        <h3 class="font-bold text-white text-base mb-1">İlk Python Döngünü Çalıştır</h3>
-                        <p class="text-xs text-slate-400 mb-4">Kod laboratuvarında bir `for` döngüsü yaz ve konsol çıktısını al.</p>
-                    </div>
-                    <button onclick="switchTab('lab')" class="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-white border border-slate-700 transition">
-                        Görevi Tamamla (+50 XP)
+            <!-- Mesajlar Buraya Dinamik Eklenir -->
+        </div>
+
+        <!-- Yazma / Klavye Input Alanı (Sabit ve Kolay Erişimli) -->
+        <div class="mt-3 relative glass-panel rounded-2xl p-2 sm:p-3 flex-shrink-0">
+            <form id="chatForm" class="flex flex-col gap-2">
+                <div class="flex items-end gap-2">
+                    <textarea 
+                        id="userInput" 
+                        rows="1" 
+                        placeholder="Bir soru sorun veya bir fikir yazın... (Klavye otomatik açılır)" 
+                        class="flex-1 bg-slate-900/60 text-slate-100 placeholder-slate-500 text-sm focus:outline-none resize-none px-3.5 py-2.5 rounded-xl border border-slate-700/60 focus:border-indigo-500/80 transition max-h-32 scrollbar-thin"
+                        required></textarea>
+                    
+                    <button 
+                        type="submit" 
+                        id="sendBtn" 
+                        class="h-10 w-10 sm:h-11 sm:w-11 rounded-xl bg-gradient-to-tr from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-400 text-white flex items-center justify-center transition shadow-md shadow-indigo-600/30 flex-shrink-0 active:scale-95 disabled:opacity-50">
+                        <i class="fa-solid fa-paper-plane text-sm"></i>
                     </button>
                 </div>
-
-                <!-- Kazanılan Rozetler -->
-                <div class="bg-cyber-card border border-cyber-border rounded-2xl p-6 flex flex-col justify-between">
-                    <div>
-                        <div class="flex items-center justify-between mb-3">
-                            <span class="text-sm font-semibold text-slate-400">Rozet Koleksiyonu</span>
-                            <span class="text-xs text-cyan-400 font-bold">3 / 12</span>
-                        </div>
-                        <div class="grid grid-cols-4 gap-2 mb-2">
-                            <div class="w-12 h-12 rounded-xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 text-lg" title="Python Çırağı">
-                                <i class="fa-brands fa-python"></i>
-                            </div>
-                            <div class="w-12 h-12 rounded-xl bg-indigo-500/10 border border-indigo-500/30 flex items-center justify-center text-indigo-400 text-lg" title="Şifre Muhafızı">
-                                <i class="fa-solid fa-key"></i>
-                            </div>
-                            <div class="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 text-lg" title="İlk Kod">
-                                <i class="fa-solid fa-terminal"></i>
-                            </div>
-                            <div class="w-12 h-12 rounded-xl bg-slate-800/50 border border-slate-700 flex items-center justify-center text-slate-600 text-lg" title="Kilitli">
-                                <i class="fa-solid fa-lock"></i>
-                            </div>
-                        </div>
-                    </div>
-                    <span class="text-xs text-slate-400">Yeni rozetler için siber güvenlik bulmacalarını çöz!</span>
+                
+                <div class="flex items-center justify-between px-2 text-[11px] text-slate-400 border-t border-slate-800/80 pt-2">
+                    <span class="flex items-center gap-1.5">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500 inline-block animate-pulse"></span>
+                        Model: <strong class="text-slate-300 font-medium">Gemini 3 Flash</strong>
+                    </span>
+                    <span class="hidden sm:inline">Göndermek için <kbd class="px-1 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-300 font-mono text-[10px]">Enter</kbd>, yeni satır için <kbd class="px-1 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-300 font-mono text-[10px]">Shift+Enter</kbd></span>
                 </div>
-            </div>
-
-            <!-- "Bugün ne öğrenmek istersin?" Hızlı Erişim Alanı -->
-            <div class="space-y-4">
-                <h2 class="text-xl font-bold text-white flex items-center">
-                    <i class="fa-solid fa-compass text-cyan-400 mr-2"></i> Bugün ne öğrenmek istersin?
-                </h2>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <!-- Kart 1 -->
-                    <div onclick="switchTab('programming')" class="bg-cyber-card border border-cyber-border hover:border-cyan-500/50 rounded-2xl p-5 cursor-pointer transition group">
-                        <div class="w-12 h-12 rounded-xl bg-yellow-500/10 text-yellow-400 flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition">
-                            <i class="fa-brands fa-python"></i>
-                        </div>
-                        <h3 class="font-bold text-white group-hover:text-cyan-400 transition">Python Programlama</h3>
-                        <p class="text-xs text-slate-400 mt-1">Değişkenler, döngüler ve pratik uygulamalar.</p>
-                    </div>
-                    <!-- Kart 2 -->
-                    <div onclick="switchTab('programming')" class="bg-cyber-card border border-cyber-border hover:border-cyan-500/50 rounded-2xl p-5 cursor-parser transition group">
-                        <div class="w-12 h-12 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition">
-                            <i class="fa-brands fa-html5"></i>
-                        </div>
-                        <h3 class="font-bold text-white group-hover:text-cyan-400 transition">Web Geliştirme (HTML/CSS)</h3>
-                        <p class="text-xs text-slate-400 mt-1">Modern web sayfaları inşa etme sanatını öğren.</p>
-                    </div>
-                    <!-- Kart 3 -->
-                    <div onclick="switchTab('security')" class="bg-cyber-card border border-cyber-border hover:border-cyan-500/50 rounded-2xl p-5 cursor-pointer transition group">
-                        <div class="w-12 h-12 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition">
-                            <i class="fa-solid fa-envelope-circle-check"></i>
-                        </div>
-                        <h3 class="font-bold text-white group-hover:text-cyan-400 transition">Phishing Tespiti (CTF)</h3>
-                        <p class="text-xs text-slate-400 mt-1">Şüpheli e-postaları yakala, dolandırıcıları alt et.</p>
-                    </div>
-                    <!-- Kart 4 -->
-                    <div onclick="switchTab('lab')" class="bg-cyber-card border border-cyber-border hover:border-cyan-500/50 rounded-2xl p-5 cursor-pointer transition group">
-                        <div class="w-12 h-12 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition">
-                            <i class="fa-solid fa-code"></i>
-                        </div>
-                        <h3 class="font-bold text-white group-hover:text-cyan-400 transition">Canlı Kod Laboratuvarı</h3>
-                        <p class="text-xs text-slate-400 mt-1">Tarayıcında anında kod yaz, çalıştır ve test et.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 2. PROGRAMLAMA SEKMESİ -->
-        <section id="tab-programming" class="hidden space-y-6">
-            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-cyber-card border border-cyber-border p-6 rounded-2xl">
-                <div>
-                    <h2 class="text-2xl font-bold text-white">Programlama Dilleri & Modüller</h2>
-                    <p class="text-sm text-slate-400">Her dil için özel hazırlanmış Ders → Örnek → Kod Editörü → Mini Proje akışı.</p>
-                </div>
-                <!-- Dil Seçici Sekmeleri -->
-                <div class="flex flex-wrap gap-2" id="lang-selectors">
-                    <button onclick="selectLanguage('python')" class="lang-btn px-4 py-2 rounded-xl text-xs font-semibold bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 transition">Python</button>
-                    <button onclick="selectLanguage('html')" class="lang-btn px-4 py-2 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300 border border-slate-700 hover:bg-slate-700 transition">HTML</button>
-                    <button onclick="selectLanguage('css')" class="lang-btn px-4 py-2 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300 border border-slate-700 hover:bg-slate-700 transition">CSS</button>
-                    <button onclick="selectLanguage('js')" class="lang-btn px-4 py-2 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300 border border-slate-700 hover:bg-slate-700 transition">JavaScript</button>
-                    <button onclick="selectLanguage('sql')" class="lang-btn px-4 py-2 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300 border border-slate-700 hover:bg-slate-700 transition">SQL</button>
-                    <button onclick="selectLanguage('git')" class="lang-btn px-4 py-2 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300 border border-slate-700 hover:bg-slate-700 transition">Git/GitHub</button>
-                </div>
-            </div>
-
-            <!-- Dil İçerik Alanı -->
-            <div id="lang-content" class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <!-- Ders ve Teorik Bilgi -->
-                <div class="lg:col-span-1 bg-cyber-card border border-cyber-border rounded-2xl p-6 space-y-4">
-                    <div class="flex items-center space-x-3">
-                        <div id="lang-icon-container" class="w-10 h-10 rounded-xl bg-yellow-500/10 text-yellow-400 flex items-center justify-center text-lg">
-                            <i class="fa-brands fa-python"></i>
-                        </div>
-                        <div>
-                            <h3 id="lang-title" class="font-bold text-white text-lg">Python Temelleri</h3>
-                            <span class="text-xs text-cyan-400">10 Dakikalık Ders</span>
-                        </div>
-                    </div>
-                    <div class="space-y-3 text-sm text-slate-300">
-                        <p id="lang-desc">
-                            Değişkenler, verileri hafızada saklamak için kullanılan kutular gibidir. Python'da değişken tanımlamak için özel bir anahtar kelimeye gerek yoktur.
-                        </p>
-                        <div class="p-3 bg-slate-900/80 rounded-xl border border-slate-800 font-code text-xs text-cyan-300">
-                            # Örnek sözdizimi<br>
-                            isim = "VEX"<br>
-                            yas = 25
-                        </div>
-                    </div>
-                    <div class="pt-2 border-t border-cyber-border">
-                        <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Alt Konular</span>
-                        <ul class="mt-2 space-y-2 text-xs text-slate-300">
-                            <li class="flex items-center space-x-2 text-cyan-400"><i class="fa-solid fa-circle-check"></i><span>1. Değişkenler ve Tipler</span></li>
-                            <li class="flex items-center space-x-2 hover:text-white cursor-pointer"><i class="fa-regular fa-circle text-slate-600"></i><span>2. Koşullu İfadeler (If/Else)</span></li>
-                            <li class="flex items-center space-x-2 hover:text-white cursor-pointer"><i class="fa-regular fa-circle text-slate-600"></i><span>3. Döngüler (For/While)</span></li>
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- İnteraktif Alıştırma & Çalıştırma Alanı -->
-                <div class="lg:col-span-2 bg-cyber-card border border-cyber-border rounded-2xl p-6 flex flex-col justify-between space-y-4">
-                    <div>
-                        <div class="flex items-center justify-between mb-3">
-                            <span class="text-xs font-semibold text-slate-400">Alıştırma: Değişken Oluşturma</span>
-                            <span class="text-xs px-2 py-0.5 rounded bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">Kolay</span>
-                        </div>
-                        <p class="text-xs text-slate-300 mb-3">Aşağıdaki kod alanında `isim` değişkenine kendi adını ata ve konsola yazdır.</p>
-                        <!-- Mini Editör -->
-                        <div class="bg-slate-950 rounded-xl border border-cyber-border overflow-hidden">
-                            <div class="bg-slate-900 px-4 py-2 border-b border-cyber-border flex items-center justify-between">
-                                <span class="text-xs font-code text-slate-400">main.py</span>
-                                <span class="text-xs text-emerald-400"><i class="fa-solid fa-circle text-[8px] mr-1"></i>Hazır</span>
-                            </div>
-                            <textarea id="lang-code-input" class="w-full bg-transparent p-4 font-code text-sm text-cyan-300 focus:outline-none resize-none h-32">isim = "VEX"
-print("Merhaba " + isim)</textarea>
-                        </div>
-                    </div>
-
-                    <div class="space-y-3">
-                        <div class="flex items-center justify-between">
-                            <button onclick="runLangExercise()" class="px-5 py-2.5 rounded-xl bg-cyan-500 text-black font-semibold text-xs hover:bg-cyan-400 transition flex items-center space-x-2">
-                                <i class="fa-solid fa-play"></i>
-                                <span>Kodu Çalıştır</span>
-                            </button>
-                            <button onclick="showHint()" class="text-xs text-slate-400 hover:text-cyan-400 transition">
-                                <i class="fa-solid fa-lightbulb mr-1"></i> İpucu Al
-                            </button>
-                        </div>
-                        <!-- Çıktı Konsolu -->
-                        <div id="lang-console" class="hidden p-3 bg-slate-950 rounded-xl border border-cyber-border font-code text-xs text-slate-300">
-                            <span class="text-slate-500">$ Çıktı:</span>
-                            <div id="lang-console-text" class="text-emerald-400 mt-1"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 3. SİBER GÜVENLİK SEKMESİ -->
-        <section id="tab-security" class="hidden space-y-6">
-            <div class="bg-cyber-card border border-cyber-border p-6 rounded-2xl">
-                <div class="max-w-3xl space-y-2">
-                    <span class="text-xs px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 font-semibold border border-emerald-500/20">Güvenli Eğitim Ortamı</span>
-                    <h2 class="text-2xl font-bold text-white">Siber Güvenlik & Etik Hack</h2>
-                    <p class="text-sm text-slate-400">Yasal çerçeveler içerisinde siber savunma mantığını kavramak için hazırlanan modüller ve CTF bulmacaları.</p>
-                </div>
-            </div>
-
-            <!-- Konu Kartları Izgarası -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                <div class="bg-cyber-card border border-cyber-border hover:border-emerald-500/50 rounded-2xl p-5 transition space-y-3">
-                    <div class="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-lg">
-                        <i class="fa-solid fa-key"></i>
-                    </div>
-                    <h3 class="font-bold text-white">Şifre Güvenliği & Hashing</h3>
-                    <p class="text-xs text-slate-400">Güçlü şifre oluşturma teknikleri, tuzlama (salting) ve MD5/SHA-256 mantığı.</p>
-                    <span class="text-xs text-emerald-400 font-semibold inline-flex items-center"><i class="fa-solid fa-check mr-1"></i> Tamamlandı</span>
-                </div>
-                <div class="bg-cyber-card border border-cyber-border hover:border-emerald-500/50 rounded-2xl p-5 transition space-y-3">
-                    <div class="w-10 h-10 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center text-lg">
-                        <i class="fa-solid fa-network-wired"></i>
-                    </div>
-                    <h3 class="font-bold text-white">IP, DNS ve HTTP/HTTPS</h3>
-                    <p class="text-xs text-slate-400">Ağ protokolleri, veri paketleri ve şifreli web trafiğinin temelleri.</p>
-                    <span class="text-xs text-slate-400 font-semibold inline-flex items-center"><i class="fa-regular fa-clock mr-1"></i> Bekliyor</span>
-                </div>
-                <div class="bg-cyber-card border border-cyber-border hover:border-emerald-500/50 rounded-2xl p-5 transition space-y-3">
-                    <div class="w-10 h-10 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center text-lg">
-                        <i class="fa-solid fa-terminal"></i>
-                    </div>
-                    <h3 class="font-bold text-white">Linux Komut Satırı Temelleri</h3>
-                    <p class="text-xs text-slate-400">Siber güvenlik dünyasının kalbi olan Linux terminallerine giriş.</p>
-                    <span class="text-xs text-slate-400 font-semibold inline-flex items-center"><i class="fa-regular fa-clock mr-1"></i> Bekliyor</span>
-                </div>
-            </div>
-
-            <!-- CTF Tarzı Güvenlik Bulmacası: Şüpheli E-Posta Bulma -->
-            <div class="bg-cyber-card border border-cyber-border rounded-2xl p-6 sm:p-8 space-y-6 glow-purple">
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center space-x-3">
-                        <div class="w-12 h-12 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center text-xl border border-purple-500/30">
-                            <i class="fa-solid fa-shield-cat"></i>
-                        </div>
-                        <div>
-                            <span class="text-xs font-bold text-purple-400 tracking-wider uppercase">CTF Güvenlik Görevi #01</span>
-                            <h3 class="text-lg font-bold text-white">Şüpheli E-Posta Avı (Phishing Tespiti)</h3>
-                        </div>
-                    </div>
-                    <span class="text-xs px-3 py-1 rounded-full bg-purple-500/10 text-purple-400 border border-purple-500/20 font-semibold">+100 Puan</span>
-                </div>
-
-                <p class="text-xs sm:text-sm text-slate-300">
-                    Bir kullanıcıya gün içerisinde gelen aşağıdaki üç e-postadan hangisinin **oltalama (phishing)** saldırısı içerdiğini bul ve sebebini öğren.
-                </p>
-
-                <!-- E-Posta Seçenekleri -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="email-options">
-                    <!-- E-posta 1 -->
-                    <div onclick="selectEmail(1)" id="email-card-1" class="email-box bg-slate-900/80 border border-slate-800 hover:border-purple-500/50 rounded-xl p-4 cursor-pointer transition space-y-2">
-                        <div class="flex items-center justify-between text-xs text-slate-400">
-                            <span>Gönderen: destek@netflix.com</span>
-                            <span>Bugün</span>
-                        </div>
-                        <h4 class="font-bold text-white text-sm">Üyeliğiniz Askıya Alındı!</h4>
-                        <p class="text-xs text-slate-400 line-clamp-2">Kredi kartı güncellemesi yapmazsanız hesabınız iptal edilecektir. Hemen tıklayın.</p>
-                    </div>
-                    <!-- E-posta 2 -->
-                    <div onclick="selectEmail(2)" id="email-card-2" class="email-box bg-slate-900/80 border border-slate-800 hover:border-purple-500/50 rounded-xl p-4 cursor-pointer transition space-y-2">
-                        <div class="flex items-center justify-between text-xs text-slate-400">
-                            <span>Gönderen: bulten@github.blog</span>
-                            <span>Dün</span>
-                        </div>
-                        <h4 class="font-bold text-white text-sm">GitHub Geliştirici Güncellemeleri</h4>
-                        <p class="text-xs text-slate-400 line-clamp-2">Bu haftanın en popüler açık kaynak projeleri ve yeni özellikler yayında.</p>
-                    </div>
-                    <!-- E-posta 3 -->
-                    <div onclick="selectEmail(3)" id="email-card-3" class="email-box bg-slate-900/80 border border-slate-800 hover:border-purple-500/50 rounded-xl p-4 cursor-pointer transition space-y-2">
-                        <div class="flex items-center justify-between text-xs text-slate-400">
-                            <span>Gönderen: kargo@suratkargo.com.tr</span>
-                            <span>2 gün önce</span>
-                        </div>
-                        <h4 class="font-bold text-white text-sm">Kargonuz Teslim Edildi</h4>
-                        <p class="text-xs text-slate-400 line-clamp-2">Gönderiniz alıcısına teslim edilmiştir. Bizi tercih ettiğiniz için teşekkür ederiz.</p>
-                    </div>
-                </div>
-
-                <!-- Sonuç Açıklama Kutusu -->
-                <div id="ctf-result" class="hidden p-4 rounded-xl border text-xs sm:text-sm"></div>
-            </div>
-        </section>
-
-        <!-- 4. KOD LABORATUVARI SEKMESİ -->
-        <section id="tab-lab" class="hidden space-y-6">
-            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-cyber-card border border-cyber-border p-6 rounded-2xl">
-                <div>
-                    <h2 class="text-2xl font-bold text-white">Canlı Kod Laboratuvarı (IDE)</h2>
-                    <p class="text-sm text-slate-400">Python veya JavaScript kodlarını yaz, çalıştır, hataları anında analiz et ve ipuçlarından faydalan.</p>
-                </div>
-                <div class="flex items-center space-x-2">
-                    <button onclick="setLabLanguage('python')" id="lab-btn-python" class="px-4 py-2 rounded-xl text-xs font-semibold bg-cyan-500/20 text-cyan-400 border border-cyan-500/30">Python</button>
-                    <button onclick="setLabLanguage('js')" id="lab-btn-js" class="px-4 py-2 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300 border border-slate-700">JavaScript</button>
-                </div>
-            </div>
-
-            <!-- IDE ve Konsol Grid -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <!-- Kod Yazma Alanı -->
-                <div class="bg-cyber-card border border-cyber-border rounded-2xl p-6 flex flex-col justify-between space-y-4">
-                    <div>
-                        <div class="flex items-center justify-between mb-3">
-                            <span id="lab-filename" class="text-xs font-code text-slate-400">workspace.py</span>
-                            <span class="text-xs text-slate-400">İnteraktif Konsol</span>
-                        </div>
-                        <textarea id="lab-textarea" class="w-full bg-slate-950 p-4 rounded-xl border border-cyber-border font-code text-sm text-cyan-300 focus:outline-none resize-none h-64"># Kodunu buraya yaz ve çalıştır
-isim = "VEXcoder"
-print("Sisteme hoş geldin, " + isim + "!")
-yas = 20
-if yas >= 18:
-    print("Erişim onaylandı: Tam yetkili kullanıcı.")
-else:
-    print("Erişim reddedildi.")</textarea>
-                    </div>
-
-                    <div class="flex items-center justify-between pt-2">
-                        <button onclick="executeLabCode()" class="px-6 py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 text-black font-semibold text-xs hover:opacity-95 transition flex items-center space-x-2 shadow-lg shadow-cyan-500/20">
-                            <i class="fa-solid fa-play"></i>
-                            <span>Çalıştır</span>
-                        </button>
-                        <button onclick="showLabHint()" class="text-xs text-slate-400 hover:text-cyan-400 transition">
-                            <i class="fa-solid fa-lightbulb mr-1"></i> İpucu Al
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Çıktı ve Hata Analizi -->
-                <div class="bg-cyber-card border border-cyber-border rounded-2xl p-6 flex flex-col space-y-4">
-                    <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Konsol Çıktısı & Hata Analizi</span>
-                    <div id="lab-output-box" class="flex-1 bg-slate-950 rounded-xl border border-cyber-border p-4 font-code text-xs text-slate-300 overflow-y-auto min-h-[220px]">
-                        <span class="text-slate-500">Sistem hazır. Kodu çalıştırmak için sol butona tıklayın...</span>
-                    </div>
-                    <div id="lab-hint-box" class="hidden p-3 rounded-xl bg-yellow-500/10 border border-yellow-500/30 text-xs text-yellow-300">
-                        <i class="fa-solid fa-circle-info mr-1"></i> <span id="lab-hint-text">İpucu: Python'da print() fonksiyonu tırnak içindeki metinleri ekrana basar.</span>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 5. GÖREV SİSTEMİ SEKMESİ -->
-        <section id="tab-quests" class="hidden space-y-6">
-            <div class="bg-cyber-card border border-cyber-border p-6 rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-4">
-                <div>
-                    <span class="text-xs px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-400 font-semibold border border-cyan-500/20">Seviye 1 Görev Paketi</span>
-                    <h2 class="text-2xl font-bold text-white mt-1">Görevler & Yetenek Testleri</h2>
-                    <p class="text-sm text-slate-400">Python, bilgisayar bilimi ve siber güvenlik sorularını tamamla, XP kazan ve seviye atla.</p>
-                </div>
-                <div class="flex items-center space-x-4 bg-slate-900 px-4 py-3 rounded-xl border border-cyber-border">
-                    <div class="text-right">
-                        <span class="text-xs text-slate-400 block">Tamamlanan</span>
-                        <span class="text-sm font-bold text-emerald-400">3 / 13 Görev</span>
-                    </div>
-                    <div class="w-12 h-12 rounded-full bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 font-bold text-sm">
-                        %23
-                    </div>
-                </div>
-            </div>
-
-            <!-- Görev Listesi -->
-            <div class="space-y-4">
-                <!-- Kategori Başlığı: Python -->
-                <h3 class="text-base font-bold text-white flex items-center"><i class="fa-brands fa-python text-yellow-400 mr-2"></i> Python Görevleri (5 Görev)</h3>
-                <div class="space-y-3">
-                    <div class="bg-cyber-card border border-cyber-border hover:border-cyan-500/40 rounded-xl p-4 flex items-center justify-between transition">
-                        <div class="flex items-center space-x-3">
-                            <div class="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center"><i class="fa-solid fa-check"></i></div>
-                            <div>
-                                <h4 class="font-bold text-white text-sm">Görev #1: Değişken Tanımlama</h4>
-                                <p class="text-xs text-slate-400">Bir değişkene string değer atayın ve ekrana yazdırın.</p>
-                            </div>
-                        </div>
-                        <span class="text-xs px-2.5 py-1 rounded bg-emerald-500/10 text-emerald-400 font-semibold border border-emerald-500/20">+50 XP</span>
-                    </div>
-                    <div class="bg-cyber-card border border-cyber-border hover:border-cyan-500/40 rounded-xl p-4 flex items-center justify-between transition">
-                        <div class="flex items-center space-x-3">
-                            <div class="w-8 h-8 rounded-lg bg-slate-800 text-slate-400 flex items-center justify-center"><i class="fa-solid fa-lock"></i></div>
-                            <div>
-                                <h4 class="font-bold text-white text-sm">Görev #2: If/Else Koşul Yapısı</h4>
-                                <p class="text-xs text-slate-400">Kullanıcı yaşına göre ehliyet alıp alamayacağını kontrol eden kod yaz.</p>
-                            </div>
-                        </div>
-                        <span class="text-xs px-2.5 py-1 rounded bg-cyan-500/10 text-cyan-400 font-semibold border border-cyan-500/20">+75 XP</span>
-                    </div>
-                </div>
-
-                <!-- Kategori Başlığı: Bilgisayar Bilimi -->
-                <h3 class="text-base font-bold text-white flex items-center pt-2"><i class="fa-solid fa-computer text-cyan-400 mr-2"></i> Bilgisayar Bilimi Soruları (5 Soru)</h3>
-                <div class="space-y-3">
-                    <div class="bg-cyber-card border border-cyber-border hover:border-cyan-500/40 rounded-xl p-4 flex items-center justify-between transition">
-                        <div class="flex items-center space-x-3">
-                            <div class="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center"><i class="fa-solid fa-check"></i></div>
-                            <div>
-                                <h4 class="font-bold text-white text-sm">Soru #1: RAM ve Sabit Disk Farkı</h4>
-                                <p class="text-xs text-slate-400">Geçici bellek ile kalıcı depolama arasındaki farkı kavra.</p>
-                            </div>
-                        </div>
-                        <span class="text-xs px-2.5 py-1 rounded bg-emerald-500/10 text-emerald-400 font-semibold border border-emerald-500/20">+40 XP</span>
-                    </div>
-                </div>
-
-                <!-- Kategori Başlığı: Siber Güvenlik -->
-                <h3 class="text-base font-bold text-white flex items-center pt-2"><i class="fa-solid fa-shield-halved text-emerald-400 mr-2"></i> Siber Güvenlik Soruları (3 Soru)</h3>
-                <div class="space-y-3">
-                    <div class="bg-cyber-card border border-cyber-border hover:border-cyan-500/40 rounded-xl p-4 flex items-center justify-between transition">
-                        <div class="flex items-center space-x-3">
-                            <div class="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center"><i class="fa-solid fa-check"></i></div>
-                            <div>
-                                <h4 class="font-bold text-white text-sm">Siber Soru #1: Şifre Karmaşıklığı</h4>
-                                <p class="text-xs text-slate-400">Güçlü bir parolanın içermesi gereken minimum karakter özelliklerini öğren.</p>
-                            </div>
-                        </div>
-                        <span class="text-xs px-2.5 py-1 rounded bg-emerald-500/10 text-emerald-400 font-semibold border border-emerald-500/20">+50 XP</span>
-                    </div>
-                </div>
-            </div>
-        </section>
-
+            </form>
+        </div>
     </main>
 
-    <!-- Alt Bilgi (Footer) -->
-    <footer class="mt-auto border-t border-cyber-border bg-cyber-dark py-6 text-center text-xs text-slate-500">
-        <p>&copy; 2026 VEXcode Studio. Kodla, Öğren, Güvenliği Keşfet. Tüm hakları saklıdır.</p>
-    </footer>
-
-    <!-- JavaScript Mantığı -->
+    <!-- JS Mantık Kodu -->
     <script>
-        function switchTab(tabId) {
-            // Tüm sekmeleri gizle
-            const tabs = ['home', 'programming', 'security', 'lab', 'quests'];
-            tabs.forEach(t => {
-                document.getElementById('tab-' + t).classList.add('hidden');
-                const btn = document.getElementById('nav-' + t);
-                if (btn) {
-                    btn.className = "nav-btn px-4 py-2 rounded-lg text-sm font-medium transition-all text-slate-400 hover:text-white hover:bg-slate-800/50";
+        // Sistem Durumu
+        let isSearchGroundingActive = true;
+        let chatHistory = [];
+        const API_KEY = "";
+        const MODEL_NAME = "gemini-3-flash-preview";
+
+        // DOM Elemanları
+        const chatContainer = document.getElementById('chatContainer');
+        const emptyState = document.getElementById('emptyState');
+        const chatForm = document.getElementById('chatForm');
+        const userInput = document.getElementById('userInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const clearChatBtn = document.getElementById('clearChatBtn');
+        const toggleGroundingBtn = document.getElementById('toggleGroundingBtn');
+        const groundingIcon = document.getElementById('groundingIcon');
+        const groundingText = document.getElementById('groundingText');
+
+        // Marked Yapılandırması
+        marked.setOptions({
+            highlight: function(code, lang) {
+                if (lang && hljs.getLanguage(lang)) {
+                    return hljs.highlight(code, { language: lang }).value;
                 }
-            });
+                return hljs.highlightAuto(code).value;
+            },
+            breaks: true
+        });
 
-            // Seçilen sekmeyi göster
-            document.getElementById('tab-' + tabId).classList.remove('hidden');
-            const activeBtn = document.getElementById('nav-' + tabId);
-            if (activeBtn) {
-                activeBtn.className = "nav-btn px-4 py-2 rounded-lg text-sm font-medium transition-all text-cyan-400 bg-cyan-500/10 border border-cyan-500/20";
+        // Sayfa Yüklendiğinde
+        window.addEventListener('DOMContentLoaded', () => {
+            loadLocalHistory();
+        });
+
+        // Otomatik Uzayan Textarea Ayarı
+        userInput.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = (this.scrollHeight) + 'px';
+        });
+
+        // Enter ile Gönderme (Shift+Enter Alt Satır)
+        userInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                chatForm.dispatchEvent(new Event('submit'));
             }
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // Hazır Soru Kartlarını Textarea'ya Aktar ve Klavyeyi Odakla
+        function setPrompt(text) {
+            userInput.value = text;
+            userInput.style.height = 'auto';
+            userInput.style.height = (userInput.scrollHeight) + 'px';
+            userInput.focus();
         }
 
-        function toggleMobileMenu() {
-            const menu = document.getElementById('mobile-menu');
-            menu.classList.toggle('hidden');
-        }
-
-        // Programlama Dili Verileri ve Değişimi
-        const langData = {
-            python: {
-                title: "Python Temelleri",
-                desc: "Değişkenler, verileri hafızada saklamak için kullanılan kutular gibidir. Python'da değişken tanımlamak için özel bir anahtar kelimeye gerek yoktur.",
-                code: 'isim = "VEX"\nprint("Merhaba " + isim)',
-                icon: 'fa-brands fa-python',
-                color: 'text-yellow-400',
-                bg: 'bg-yellow-500/10'
-            },
-            html: {
-                title: "HTML5 Temelleri",
-                desc: "HTML, web sayfalarının iskeletini oluşturur. Etiketler (tags) yardımıyla metinler, görseller ve bağlantılar eklenir.",
-                code: '<div class="card">\n  <h1>Merhaba Dünya</h1>\n  <p>Web geliştirme yolculuğu</p>\n</div>',
-                icon: 'fa-brands fa-html5',
-                color: 'text-blue-400',
-                bg: 'bg-blue-500/10'
-            },
-            css: {
-                title: "CSS3 Stilleri",
-                desc: "CSS, web sitelerine renk, tipografi, düzen ve modern animasyonlar kazandıran stil dilidir.",
-                code: '.card {\n  background: #131b31;\n  border-radius: 12px;\n  color: #00f2fe;\n}',
-                icon: 'fa-brands fa-css3-alt',
-                color: 'text-cyan-400',
-                bg: 'bg-cyan-500/10'
-            },
-            js: {
-                title: "JavaScript Temelleri",
-                desc: "JavaScript, web sayfalarına dinamik davranış ve etkileşim katan programlama dilidir.",
-                code: 'const ogrenci = "VEX";\nconsole.log("Hoş geldin " + ogrenci);',
-                icon: 'fa-brands fa-js',
-                color: 'text-yellow-300',
-                bg: 'bg-yellow-400/10'
-            },
-            sql: {
-                title: "SQL Veritabanı Sorguları",
-                desc: "İlişkisel veritabanlarından veri çekmek, güncellemek ve filtrelemek için kullanılan standart dildir.",
-                code: "SELECT * FROM kullanicilar \nWHERE seviye > 1 \nORDER BY puan DESC;",
-                icon: 'fa-solid fa-database',
-                color: 'text-indigo-400',
-                bg: 'bg-indigo-500/10'
-            },
-            git: {
-                title: "Git & GitHub Versiyon Kontrolü",
-                desc: "Kod değişikliklerini takip etmek ve ekip halinde çalışmak için kullanılan versiyon kontrol sistemidir.",
-                code: "git init\ngit add .\ngit commit -m 'İlk commit'",
-                icon: 'fa-brands fa-git-alt',
-                color: 'text-orange-400',
-                bg: 'bg-orange-500/10'
-            }
-        };
-
-        function selectLanguage(langKey) {
-            // Butonları güncelle
-            const buttons = document.querySelectorAll('#lang-selectors button');
-            buttons.forEach(b => {
-                b.className = "lang-btn px-4 py-2 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300 border border-slate-700 hover:bg-slate-700 transition";
-            });
-            event.currentTarget.className = "lang-btn px-4 py-2 rounded-xl text-xs font-semibold bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 transition";
-
-            const data = langData[langKey];
-            document.getElementById('lang-title').innerText = data.title;
-            document.getElementById('lang-desc').innerText = data.desc;
-            document.getElementById('lang-code-input').value = data.code;
-            
-            const iconContainer = document.getElementById('lang-icon-container');
-            iconContainer.className = `w-10 h-10 rounded-xl ${data.bg} ${data.color} flex items-center justify-center text-lg`;
-            iconContainer.innerHTML = `<i class="${data.icon}"></i>`;
-
-            document.getElementById('lang-console').classList.add('hidden');
-        }
-
-        function runLangExercise() {
-            const code = document.getElementById('lang-code-input').value;
-            const consoleBox = document.getElementById('lang-console');
-            const consoleText = document.getElementById('lang-console-text');
-            
-            consoleBox.classList.remove('hidden');
-            consoleText.innerHTML = "Kod başarıyla çalıştırıldı!<br>> Çıktı: İşlem başarılı, +20 Puan kazandınız.";
-        }
-
-        function showHint() {
-            alert("İpucu: Değişken tanımlarken sayı ile başlayamazsınız ve tırnak işaretlerini unutmamalısınız.");
-        }
-
-        // CTF E-posta Avı Mantığı
-        function selectEmail(id) {
-            // Seçimleri sıfırla
-            for(let i=1; i<=3; i++) {
-                document.getElementById('email-card-' + i).className = "email-box bg-slate-900/80 border border-slate-800 hover:border-purple-500/50 rounded-xl p-4 cursor-pointer transition space-y-2";
-            }
-            
-            const selectedCard = document.getElementById('email-card-' + id);
-            const resultBox = document.getElementById('ctf-result');
-            resultBox.classList.remove('hidden');
-
-            if(id === 1) {
-                selectedCard.className = "email-box bg-purple-950/40 border border-purple-500 rounded-xl p-4 cursor-pointer transition space-y-2 ring-2 ring-purple-500/50";
-                resultBox.className = "p-4 rounded-xl border bg-emerald-500/10 border-emerald-500/30 text-emerald-300 text-xs sm:text-sm";
-                resultBox.innerHTML = "<strong>Tebrikler! Doğru Cevap.</strong> E-posta adresi her ne kadar 'destek@netflix.com' gibi görünse de, aciliyet hissi yaratarak ('Kredi kartı güncellemesi yapmazsanız...') kullanıcıyı sahte bir phishing linkine tıklatmaya çalışan klasik bir oltalama saldırısıdır.";
+        // Canlı Arama/Grounding Modu Aç/Kapa
+        toggleGroundingBtn.addEventListener('click', () => {
+            isSearchGroundingActive = !isSearchGroundingActive;
+            if (isSearchGroundingActive) {
+                groundingIcon.className = "fa-solid fa-globe text-cyan-400";
+                groundingText.innerText = "Canlı Bilim Araması: Açık";
+                toggleGroundingBtn.className = "flex items-center space-x-2 px-3 py-1.5 rounded-xl border border-indigo-500/30 bg-indigo-950/40 text-indigo-300 hover:bg-indigo-900/50 transition text-xs font-medium";
             } else {
-                selectedCard.className = "email-box bg-red-950/40 border border-red-500 rounded-xl p-4 cursor-pointer transition space-y-2 ring-2 ring-red-500/50";
-                resultBox.className = "p-4 rounded-xl border bg-red-500/10 border-red-500/30 text-red-300 text-xs sm:text-sm";
-                resultBox.innerHTML = "<strong>Yanlış Seçim!</strong> Bu e-posta güvenlidir veya seçtiğiniz seçenek şüpheli nitelik taşımamaktadır. Lütfen aciliyet belirten ve panik yaratan 1 numaralı e-postayı inceleyin.";
+                groundingIcon.className = "fa-solid fa-ban text-slate-400";
+                groundingText.innerText = "Canlı Bilim Araması: Kapalı";
+                toggleGroundingBtn.className = "flex items-center space-x-2 px-3 py-1.5 rounded-xl border border-slate-700 bg-slate-800/40 text-slate-400 hover:bg-slate-800 transition text-xs font-medium";
             }
-        }
+        });
 
-        // Kod Laboratuvarı Mantığı
-        let currentLabLang = 'python';
-        function setLabLanguage(lang) {
-            currentLabLang = lang;
-            const pyBtn = document.getElementById('lab-btn-python');
-            const jsBtn = document.getElementById('lab-btn-js');
-            const filename = document.getElementById('lab-filename');
-            const textarea = document.getElementById('lab-textarea');
+        // Form Gönderme
+        chatForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const message = userInput.value.trim();
+            if (!message) return;
 
-            if(lang === 'python') {
-                pyBtn.className = "px-4 py-2 rounded-xl text-xs font-semibold bg-cyan-500/20 text-cyan-400 border border-cyan-500/30";
-                jsBtn.className = "px-4 py-2 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300 border border-slate-700";
-                filename.innerText = "workspace.py";
-                textarea.value = '# Python Kod Laboratuvarı\nisim = "VEXcoder"\nprint("Merhaba, " + isim)';
-            } else {
-                jsBtn.className = "px-4 py-2 rounded-xl text-xs font-semibold bg-cyan-500/20 text-cyan-400 border border-cyan-500/30";
-                pyBtn.className = "px-4 py-2 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300 border border-slate-700";
-                filename.innerText = "workspace.js";
-                textarea.value = '// JavaScript Kod Laboratuvarı\nconst isim = "VEXcoder";\nconsole.log("Merhaba, " + isim);';
+            // Alanı Temizle ve Yüksekliği Sıfırla
+            userInput.value = '';
+            userInput.style.height = 'auto';
+
+            // İlk ekranı gizle
+            if (emptyState) emptyState.style.display = 'none';
+
+            // Kullanıcı Mesajını Ekle
+            appendUserMessage(message);
+
+            // Geçmişe Ekle
+            chatHistory.push({ role: 'user', parts: [{ text: message }] });
+
+            // Yükleniyor Göstergesi
+            const loadingId = appendLoadingMessage();
+
+            // Yapay Zeka Yanıtı Al
+            try {
+                const responseData = await queryGeminiAPI(message);
+                removeMessage(loadingId);
+                
+                const responseText = responseData.text;
+                const sources = responseData.sources || [];
+
+                // AI Mesajını Göster
+                appendBotMessage(responseText, sources);
+
+                // Geçmişe Ekle & Kaydet
+                chatHistory.push({ role: 'model', parts: [{ text: responseText }] });
+                saveLocalHistory();
+
+            } catch (error) {
+                console.error('API Hatası:', error);
+                removeMessage(loadingId);
+                appendErrorMessage("Bilimsel verilere erişilirken bir hata oluştu. Lütfen tekrar deneyin.");
             }
-            document.getElementById('lab-output-box').innerHTML = '<span class="text-slate-500">Dil değiştirildi. Kodu çalıştırmaya hazırsınız...</span>';
-            document.getElementById('lab-hint-box').classList.add('hidden');
-        }
+        });
 
-        function executeLabCode() {
-            const code = document.getElementById('lab-textarea').value;
-            const outputBox = document.getElementById('lab-output-box');
+        // Gemini API Çağrısı
+        async function queryGeminiAPI(prompt, retries = 3, delay = 1000) {
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL_NAME}:generateContent?key=${API_KEY}`;
             
-            // Simüle edilmiş konsol çıktısı
-            outputBox.innerHTML = `
-                <div class="text-slate-400">$ running ${currentLabLang === 'python' ? 'python3 main.py' : 'node workspace.js'}</div>
-                <div class="text-emerald-400 mt-1">Merhaba, VEXcoder!</div>
-                <div class="text-cyan-400 mt-1">Erişim onaylandı: Tam yetkili kullanıcı.</div>
-                <div class="text-slate-500 mt-2">[İşlem 0.04 saniyede tamamlandı - Exit Code: 0]</div>
+            const systemPrompt = "Sen VEXcode AI bilimsel bilgi ve teknoloji asistanısın. Yanıtlarını her zaman Türkçe, net, anlaşılır, kanıtlanmış bilimsel gerçeklere ve mantığa dayalı olarak ver. Kodlama sorularında açıklayıcı ve çalışır kod örnekleri sun. Türkçe dili kurallarına özen göster.";
+
+            const payload = {
+                contents: chatHistory,
+                systemInstruction: {
+                    parts: [{ text: systemPrompt }]
+                }
+            };
+
+            if (isSearchGroundingActive) {
+                payload.tools = [{ "google_search": {} }];
+            }
+
+            for (let i = 0; i < retries; i++) {
+                try {
+                    const res = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (!res.ok) {
+                        throw new Error(`HTTP Hata koda: ${res.status}`);
+                    }
+
+                    const result = await res.json();
+                    const candidate = result.candidates?.[0];
+
+                    if (candidate && candidate.content?.parts?.[0]?.text) {
+                        const text = candidate.content.parts[0].text;
+                        
+                        let sources = [];
+                        const groundingMetadata = candidate.groundingMetadata;
+                        if (groundingMetadata && groundingMetadata.groundingAttributions) {
+                            sources = groundingMetadata.groundingAttributions
+                                .map(attr => ({
+                                    uri: attr.web?.uri,
+                                    title: attr.web?.title
+                                }))
+                                .filter(src => src.uri && src.title);
+                        }
+
+                        return { text, sources };
+                    } else {
+                        throw new Error("Yanıt formatı geçersiz.");
+                    }
+                } catch (err) {
+                    if (i === retries - 1) throw err;
+                    await new Promise(r => setTimeout(r, delay * Math.pow(2, i)));
+                }
+            }
+        }
+
+        // Kullanıcı Mesajı Arayüzü
+        function appendUserMessage(text) {
+            const msgDiv = document.createElement('div');
+            msgDiv.className = 'flex justify-end gap-2.5 mb-3';
+            msgDiv.innerHTML = `
+                <div class="max-w-[85%] sm:max-w-[75%] bg-indigo-600 text-white p-3.5 rounded-2xl rounded-tr-none shadow-md shadow-indigo-600/20 text-sm leading-relaxed">
+                    ${escapeHtml(text)}
+                </div>
+                <div class="w-8 h-8 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center text-xs font-bold text-slate-300 flex-shrink-0">
+                    Sen
+                </div>
             `;
+            chatContainer.appendChild(msgDiv);
+            scrollToBottom();
         }
 
-        function showLabHint() {
-            const hintBox = document.getElementById('lab-hint-box');
-            hintBox.classList.toggle('hidden');
+        // AI Bot Mesajı Arayüzü
+        function appendBotMessage(markdownText, sources = []) {
+            const msgDiv = document.createElement('div');
+            msgDiv.className = 'flex gap-2.5 mb-3';
+            
+            const renderedHtml = marked.parse(markdownText);
+            
+            let sourcesHtml = '';
+            if (sources.length > 0) {
+                const uniqueSources = Array.from(new Set(sources.map(s => s.uri)))
+                    .map(uri => sources.find(s => s.uri === uri));
+
+                sourcesHtml = `
+                    <div class="mt-3 pt-3 border-t border-slate-800 text-xs">
+                        <span class="text-slate-400 font-semibold block mb-1.5 flex items-center gap-1.5">
+                            <i class="fa-solid fa-bookmark text-indigo-400"></i> Doğrulanmış Bilimsel Kaynaklar:
+                        </span>
+                        <div class="flex flex-wrap gap-2">
+                            ${uniqueSources.slice(0, 5).map(s => `
+                                <a href="${escapeHtml(s.uri)}" target="_blank" rel="noopener noreferrer" class="px-2.5 py-1 rounded-md bg-slate-800/80 border border-slate-700 text-cyan-400 hover:underline hover:bg-slate-800 text-[11px] truncate max-w-[220px] inline-block">
+                                    <i class="fa-solid fa-arrow-up-right-from-square text-[9px] mr-1"></i>${escapeHtml(s.title || 'Kaynak')}
+                                </a>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            msgDiv.innerHTML = `
+                <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-indigo-600 to-cyan-500 flex items-center justify-center text-xs font-bold text-white flex-shrink-0 shadow-md shadow-indigo-500/20">
+                    V
+                </div>
+                <div class="max-w-[88%] sm:max-w-[80%] glass-panel bg-slate-900/90 text-slate-200 p-4 rounded-2xl rounded-tl-none border border-slate-800/80 text-sm shadow-sm overflow-hidden">
+                    <div class="markdown-content">
+                        ${renderedHtml}
+                    </div>
+                    ${sourcesHtml}
+                </div>
+            `;
+            
+            chatContainer.appendChild(msgDiv);
+            scrollToBottom();
+        }
+
+        // Yükleniyor Durumu
+        function appendLoadingMessage() {
+            const id = 'loading-' + Date.now();
+            const msgDiv = document.createElement('div');
+            msgDiv.id = id;
+            msgDiv.className = 'flex gap-2.5 mb-3';
+            msgDiv.innerHTML = `
+                <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-indigo-600 to-cyan-500 flex items-center justify-center text-xs font-bold text-white flex-shrink-0 shadow-md shadow-indigo-500/20">
+                    V
+                </div>
+                <div class="glass-panel bg-slate-900/90 text-slate-400 px-4 py-3 rounded-2xl rounded-tl-none border border-slate-800/80 text-xs flex items-center space-x-2">
+                    <i class="fa-solid fa-circle-notch animate-spin text-indigo-400"></i>
+                    <span>Bilimsel kaynaklar taranıyor ve yanıt hesaplanıyor...</span>
+                </div>
+            `;
+            chatContainer.appendChild(msgDiv);
+            scrollToBottom();
+            return id;
+        }
+
+        // Hata Mesajı
+        function appendErrorMessage(errorMsg) {
+            const msgDiv = document.createElement('div');
+            msgDiv.className = 'flex gap-2.5 mb-3';
+            msgDiv.innerHTML = `
+                <div class="w-8 h-8 rounded-xl bg-rose-600/20 border border-rose-500/30 flex items-center justify-center text-xs font-bold text-rose-400 flex-shrink-0">
+                    !
+                </div>
+                <div class="bg-rose-950/30 border border-rose-900/50 text-rose-300 p-3.5 rounded-2xl rounded-tl-none text-xs">
+                    ${escapeHtml(errorMsg)}
+                </div>
+            `;
+            chatContainer.appendChild(msgDiv);
+            scrollToBottom();
+        }
+
+        // Eleman Silme
+        function removeMessage(id) {
+            const el = document.getElementById(id);
+            if (el) el.remove();
+        }
+
+        // Aşağı Kaydır
+        function scrollToBottom() {
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        // HTML Escape
+        function escapeHtml(text) {
+            return text
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        // Sohbet Temizleme
+        clearChatBtn.addEventListener('click', () => {
+            chatHistory = [];
+            localStorage.removeItem('vex_ai_chat_history_tr');
+            chatContainer.innerHTML = '';
+            chatContainer.appendChild(emptyState);
+            emptyState.style.display = 'block';
+        });
+
+        // Yerel Hafızaya Kaydetme
+        function saveLocalHistory() {
+            try {
+                const recentHistory = chatHistory.slice(-20);
+                localStorage.setItem('vex_ai_chat_history_tr', JSON.stringify(recentHistory));
+            } catch (e) {
+                console.warn('Hafızaya yazılamadı', e);
+            }
+        }
+
+        // Yerel Hafızadan Yükleme
+        function loadLocalHistory() {
+            try {
+                const saved = localStorage.getItem('vex_ai_chat_history_tr');
+                if (saved) {
+                    chatHistory = JSON.parse(saved);
+                    if (chatHistory.length > 0) {
+                        if (emptyState) emptyState.style.display = 'none';
+                        chatHistory.forEach(msg => {
+                            if (msg.role === 'user') {
+                                appendUserMessage(msg.parts[0].text);
+                            } else if (msg.role === 'model') {
+                                appendBotMessage(msg.parts[0].text);
+                            }
+                        });
+                    }
+                }
+            } catch (e) {
+                console.warn('Hafızadan okunamadı', e);
+            }
         }
     </script>
 </body>
-    </html>
+</html>
+```
