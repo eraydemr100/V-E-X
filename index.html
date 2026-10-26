@@ -247,7 +247,7 @@
       <div class="brand">
         <div class="logo">V</div>
         <div class="title-group">
-          <h1>VEXcode AI <span class="version-tag">v2.3</span></h1>
+          <h1>VEXcode AI <span class="version-tag">v2.4</span></h1>
           <div class="team-info">Ekip: Veyra | Lyra | Veylox | Aria</div>
         </div>
       </div>
@@ -329,19 +329,6 @@
       chatWindow.innerHTML = '<div class="chat-bubble bot-msg">Sohbet temizlendi. Bir soru sorun!</div>';
     });
 
-    async function fetchGeminiResponse(prompt, modelName) {
-      const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`;
-      return await fetch(endpoint, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{
-            parts: [{ text: "Sen VEXcode AI bilimsel asistanısın. Doğrulanmış bilimsel gerçeklere dayanarak Türkçe cevap ver:\n\nSoru: " + prompt }]
-          }]
-        })
-      });
-    }
-
     async function sendMessage() {
       const text = userInput.value.trim();
       if (!text) return;
@@ -360,12 +347,18 @@
       sendBtn.disabled = true;
 
       try {
-        // Öncelikli olarak gemini-1.5-flash dene, sorun olursa gemini-1.5-pro dene
-        let response = await fetchGeminiResponse(text, 'gemini-1.5-flash');
+        // En kararlı ve ücretsiz katmanda sorunsuz çalışan model
+        const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
         
-        if (!response.ok) {
-          response = await fetchGeminiResponse(text, 'gemini-1.5-pro');
-        }
+        const response = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{
+              parts: [{ text: "Sen VEXcode AI bilimsel asistanısın. Doğrulanmış bilimsel gerçeklere dayanarak Türkçe cevap ver:\n\nSoru: " + text }]
+            }]
+          })
+        });
 
         const data = await response.json();
 
