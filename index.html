@@ -1,645 +1,494 @@
 <!DOCTYPE html>
-<html lang="tr" class="dark">
+<html lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>VEXcode AI | Yapay Zeka & Bilimsel Bilgi Asistanı</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        vex: {
-                            50: '#f0f4ff',
-                            100: '#e0e8ff',
-                            400: '#818cf8',
-                            500: '#6366f1',
-                            600: '#4f46e5',
-                            700: '#4338ca',
-                            900: '#0f172a',
-                            950: '#070a14'
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-    <!-- FontAwesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Marked.js for Markdown Rendering -->
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <!-- Highlight.js for Syntax Highlighting -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
-    <style>
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: rgba(15, 23, 42, 0.6);
-        }
-        ::-webkit-scrollbar-thumb {
-            background: rgba(99, 102, 241, 0.3);
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: rgba(99, 102, 241, 0.6);
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VEXcode AI | Bilimsel Yapay Zeka Asistanı</title>
+  <style>
+    :root {
+      --bg-dark: #0b0f19;
+      --card-bg: #131b2e;
+      --accent-blue: #4f46e5;
+      --accent-hover: #4338ca;
+      --text-main: #f3f4f6;
+      --text-muted: #9ca3af;
+      --border-color: #1f293d;
+      --user-msg-bg: #3730a3;
+      --bot-msg-bg: #1e293b;
+      --error-bg: #7f1d1d;
+      --error-text: #fecaca;
+    }
 
-        /* Glassmorphism effects */
-        .glass-panel {
-            background: rgba(15, 23, 42, 0.85);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-        }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    }
 
-        .glass-input {
-            background: rgba(30, 41, 59, 0.85);
-            backdrop-filter: blur(8px);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-        }
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
 
-        /* Pulsing Glow Effect */
-        .glow-effect {
-            box-shadow: 0 0 25px -5px rgba(99, 102, 241, 0.35);
-        }
+    /* Header */
+    header {
+      background-color: var(--card-bg);
+      border-bottom: 1px solid var(--border-color);
+      padding: 12px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
 
-        /* Markdown styling overrides inside chat */
-        .markdown-content p { margin-bottom: 0.75rem; line-height: 1.6; }
-        .markdown-content p:last-child { margin-bottom: 0; }
-        .markdown-content ul { list-style-type: disc; margin-left: 1.5rem; margin-bottom: 0.75rem; }
-        .markdown-content ol { list-style-type: decimal; margin-left: 1.5rem; margin-bottom: 0.75rem; }
-        .markdown-content code:not(pre code) {
-            background: rgba(99, 102, 241, 0.2);
-            color: #c7d2fe;
-            padding: 0.15rem 0.4rem;
-            border-radius: 0.25rem;
-            font-size: 0.875em;
-            font-family: monospace;
-        }
-        .markdown-content pre {
-            margin-top: 0.75rem;
-            margin-bottom: 0.75rem;
-            border-radius: 0.5rem;
-            overflow-x: auto;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        .markdown-content h1, .markdown-content h2, .markdown-content h3 {
-            font-weight: 700;
-            color: #f8fafc;
-            margin-top: 1rem;
-            margin-bottom: 0.5rem;
-        }
-        .markdown-content h1 { font-size: 1.3rem; }
-        .markdown-content h2 { font-size: 1.15rem; }
-        .markdown-content h3 { font-size: 1.05rem; }
-        .markdown-content blockquote {
-            border-left: 4px solid #6366f1;
-            padding-left: 1rem;
-            color: #94a3b8;
-            font-style: italic;
-            margin: 0.75rem 0;
-        }
-        .markdown-content table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 0.75rem 0;
-        }
-        .markdown-content th, .markdown-content td {
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 0.5rem 0.75rem;
-            text-align: left;
-        }
-        .markdown-content th {
-            background: rgba(30, 41, 59, 0.8);
-        }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
 
-        html, body {
-            height: 100%;
-            overflow: hidden;
-        }
-    </style>
+    .logo {
+      width: 38px;
+      height: 38px;
+      background: linear-gradient(135deg, #6366f1, #a855f7);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 20px;
+      color: white;
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+    }
+
+    .title-group h1 {
+      font-size: 18px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .version-tag {
+      font-size: 11px;
+      background-color: var(--border-color);
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: var(--text-muted);
+    }
+
+    .team-info {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .btn {
+      background-color: var(--border-color);
+      color: var(--text-main);
+      border: 1px solid rgba(255,255,255,0.05);
+      padding: 8px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .btn:hover {
+      background-color: #27354f;
+    }
+
+    .btn-primary {
+      background-color: var(--accent-blue);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--accent-hover);
+    }
+
+    /* Info Banner */
+    .banner {
+      background: linear-gradient(90deg, #1e1b4b, #1e293b);
+      border-bottom: 1px solid var(--border-color);
+      padding: 10px 20px;
+      font-size: 13px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .banner-text {
+      color: #c7d2fe;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .close-banner {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    /* Main Chat Container */
+    main {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .chat-bubble {
+      max-width: 80%;
+      padding: 14px 18px;
+      border-radius: 14px;
+      line-height: 1.6;
+      font-size: 15px;
+      word-break: break-word;
+      white-space: pre-wrap;
+    }
+
+    .user-msg {
+      align-self: flex-end;
+      background-color: var(--user-msg-bg);
+      color: white;
+      border-bottom-right-radius: 4px;
+    }
+
+    .bot-msg {
+      align-self: flex-start;
+      background-color: var(--bot-msg-bg);
+      color: var(--text-main);
+      border-bottom-left-radius: 4px;
+      border: 1px solid var(--border-color);
+    }
+
+    .error-msg {
+      align-self: center;
+      background-color: var(--error-bg);
+      color: var(--error-text);
+      border: 1px solid #991b1b;
+      max-width: 90%;
+      font-size: 13px;
+    }
+
+    /* Footer & Input Area */
+    footer {
+      background-color: var(--card-bg);
+      border-top: 1px solid var(--border-color);
+      padding: 14px 20px;
+    }
+
+    .input-container {
+      display: flex;
+      gap: 10px;
+      align-items: flex-end;
+      background-color: var(--bg-dark);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 8px 12px;
+    }
+
+    .input-container:focus-within {
+      border-color: var(--accent-blue);
+    }
+
+    textarea {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: var(--text-main);
+      font-size: 15px;
+      resize: none;
+      max-height: 120px;
+      min-height: 24px;
+      line-height: 24px;
+    }
+
+    .send-btn {
+      background-color: var(--accent-blue);
+      color: white;
+      border: none;
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .send-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* API Modal */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .modal {
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      padding: 24px;
+      border-radius: 14px;
+      width: 90%;
+      max-width: 450px;
+    }
+
+    .modal h2 {
+      margin-bottom: 8px;
+      font-size: 18px;
+    }
+
+    .modal p {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+      line-height: 1.4;
+    }
+
+    .modal input {
+      width: 100%;
+      padding: 10px;
+      background-color: var(--bg-dark);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      color: white;
+      font-size: 14px;
+      margin-bottom: 16px;
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    @media (max-width: 600px) {
+      .chat-bubble {
+        max-width: 90%;
+      }
+      .team-info {
+        display: none;
+      }
+    }
+  </style>
 </head>
-<body class="bg-vex-950 text-slate-100 h-full flex flex-col font-sans antialiased selection:bg-indigo-500 selection:text-white">
+<body>
 
-    <!-- Üst Gezinme Çubuğu (Header) -->
-    <header class="h-16 border-b border-slate-800/80 glass-panel flex-shrink-0 z-30 flex items-center justify-between px-3 md:px-6">
-        <div class="flex items-center space-x-3">
-            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-cyan-400 flex items-center justify-center shadow-lg shadow-indigo-500/20">
-                <i class="fa-solid text-xl text-white font-black">V</i>
-            </div>
-            <div>
-                <div class="flex items-center space-x-2">
-                    <span class="font-bold text-base sm:text-lg tracking-tight bg-gradient-to-r from-white via-slate-200 to-indigo-300 bg-clip-text text-transparent">VEXcode AI</span>
-                    <span class="text-[10px] font-semibold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 px-2 py-0.5 rounded-full uppercase tracking-wider">v1.0</span>
-                </div>
-                <p class="text-[11px] text-slate-400 hidden sm:block">Ekip: Veyra, Lyra, Veylox & Aria</p>
-            </div>
-        </div>
-
-        <!-- İşlem Butonları -->
-        <div class="flex items-center space-x-1.5 sm:space-x-2">
-            <!-- API Anahtarı Butonu -->
-            <button id="openApiKeyModal" class="flex items-center space-x-1.5 px-2.5 py-1.5 rounded-xl border border-amber-500/30 bg-amber-500/10 text-amber-300 hover:bg-amber-500/20 transition text-xs font-medium">
-                <i class="fa-solid fa-key text-amber-400"></i>
-                <span class="hidden sm:inline">API Anahtarı</span>
-            </button>
-
-            <!-- Canlı İnternet / Bilim Araması Modu -->
-            <button id="toggleGroundingBtn" class="flex items-center space-x-1.5 px-2.5 py-1.5 rounded-xl border border-indigo-500/30 bg-indigo-950/40 text-indigo-300 hover:bg-indigo-900/50 transition text-xs font-medium">
-                <i class="fa-solid fa-globe text-cyan-400" id="groundingIcon"></i>
-                <span class="hidden md:inline" id="groundingText">Canlı Bilim Araması: Açık</span>
-            </button>
-
-            <!-- Sohbet Temizle -->
-            <button id="clearChatBtn" class="p-2 text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 rounded-xl transition" title="Sohbeti Temizle">
-                <i class="fa-solid fa-trash-can text-sm"></i>
-            </button>
-        </div>
-    </header>
-
-    <!-- Ana Sohbet ve İçerik Alanı -->
-    <main class="flex-1 flex flex-col max-w-5xl w-full mx-auto p-2 sm:p-4 overflow-hidden">
-
-        <!-- Bilgilendirme Kartı -->
-        <div id="introCard" class="glass-panel p-3 sm:p-4 rounded-2xl mb-2.5 relative overflow-hidden flex-shrink-0 transition-all duration-300">
-            <button onclick="document.getElementById('introCard').style.display='none'" class="absolute top-3 right-3 text-slate-400 hover:text-white p-1">
-                <i class="fa-solid fa-xmark text-sm"></i>
-            </button>
-            <div class="flex items-start sm:items-center gap-3">
-                <div class="p-2.5 bg-indigo-500/10 rounded-xl border border-indigo-500/20 text-indigo-400 flex-shrink-0">
-                    <i class="fa-solid fa-brain text-xl"></i>
-                </div>
-                <div class="pr-6">
-                    <h2 class="text-xs font-bold text-slate-200 uppercase tracking-wider mb-0.5">Bilimsel Yapay Zeka Motoru</h2>
-                    <p class="text-xs text-slate-400 leading-relaxed">
-                        Evren, kuantum fiziği, kodlama, matematik, tarih ve bilimsel olarak kanıtlanmış tüm konular hakkında dilediğin soruyu sorabilirsin!
-                    </p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Sohbet Mesaj Alanı -->
-        <div id="chatContainer" class="flex-1 glass-panel rounded-2xl p-3 sm:p-5 overflow-y-auto flex flex-col space-y-4">
-            
-            <!-- Karşılama Ekranı (İlk Açılışta) -->
-            <div id="emptyState" class="m-auto text-center py-6 px-4 max-w-lg">
-                <div class="w-16 h-16 rounded-2xl bg-indigo-600/20 border border-indigo-500/30 flex items-center justify-center mx-auto mb-4 text-indigo-400 glow-effect">
-                    <i class="fa-solid fa-atom text-3xl animate-spin-slow"></i>
-                </div>
-                <h3 class="text-lg font-bold text-white mb-1.5">Neyi keşfetmek istersiniz?</h3>
-                <p class="text-xs text-slate-400 mb-5">Aşağıdaki hazır konulardan birine tıklayabilir veya sorunuzu doğrudan yazabilirsiniz.</p>
-                
-                <!-- Örnek Soru Kartları -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-left">
-                    <button onclick="setPrompt('Kuantum dolaşıklık ilkesi nedir ve bilimsel olarak nasıl kanıtlanmıştır?')" class="p-3 rounded-xl bg-slate-800/60 border border-slate-700/60 hover:border-indigo-500/50 hover:bg-slate-800 transition text-xs flex items-center space-x-3 group">
-                        <i class="fa-solid fa-microscope text-indigo-400 group-hover:scale-110 transition"></i>
-                        <span class="text-slate-300">Kuantum Fiziği</span>
-                    </button>
-                    <button onclick="setPrompt('Python ile bir Yapay Sinir Ağı (Neural Network) mimarisi nasıl kodlanır?')" class="p-3 rounded-xl bg-slate-800/60 border border-slate-700/60 hover:border-indigo-500/50 hover:bg-slate-800 transition text-xs flex items-center space-x-3 group">
-                        <i class="fa-solid fa-code text-indigo-400 group-hover:scale-110 transition"></i>
-                        <span class="text-slate-300">Python Yapay Zeka Kodu</span>
-                    </button>
-                    <button onclick="setPrompt('Nükleer füzyon enerjisi ile ilgili ulaşılan son bilimsel gelişmeler nelerdir?')" class="p-3 rounded-xl bg-slate-800/60 border border-slate-700/60 hover:border-indigo-500/50 hover:bg-slate-800 transition text-xs flex items-center space-x-3 group">
-                        <i class="fa-solid fa-bolt text-indigo-400 group-hover:scale-110 transition"></i>
-                        <span class="text-slate-300">Nükleer Füzyon Çalışmaları</span>
-                    </button>
-                    <button onclick="setPrompt('Karadeliklerin iç yapısı ve olay ufku hakkında kanıtlanmış fizik teorileri nelerdir?')" class="p-3 rounded-xl bg-slate-800/60 border border-slate-700/60 hover:border-indigo-500/50 hover:bg-slate-800 transition text-xs flex items-center space-x-3 group">
-                        <i class="fa-solid fa-user-astronaut text-indigo-400 group-hover:scale-110 transition"></i>
-                        <span class="text-slate-300">Astrofizik & Karadelikler</span>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Mesajlar Buraya Dinamik Eklenir -->
-        </div>
-
-        <!-- Yazma / Klavye Input Alanı -->
-        <div class="mt-2.5 relative glass-panel rounded-2xl p-2 sm:p-3 flex-shrink-0">
-            <form id="chatForm" class="flex flex-col gap-2">
-                <div class="flex items-end gap-2">
-                    <textarea 
-                        id="userInput" 
-                        rows="1" 
-                        placeholder="Bir soru sorun veya bir fikir yazın..." 
-                        class="flex-1 bg-slate-900/60 text-slate-100 placeholder-slate-500 text-sm focus:outline-none resize-none px-3.5 py-2.5 rounded-xl border border-slate-700/60 focus:border-indigo-500/80 transition max-h-32 scrollbar-thin"
-                        required></textarea>
-                    
-                    <button 
-                        type="submit" 
-                        id="sendBtn" 
-                        class="h-10 w-10 sm:h-11 sm:w-11 rounded-xl bg-gradient-to-tr from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-400 text-white flex items-center justify-center transition shadow-md shadow-indigo-600/30 flex-shrink-0 active:scale-95 disabled:opacity-50">
-                        <i class="fa-solid fa-paper-plane text-sm"></i>
-                    </button>
-                </div>
-                
-                <div class="flex items-center justify-between px-2 text-[11px] text-slate-400 border-t border-slate-800/80 pt-2">
-                    <span class="flex items-center gap-1.5">
-                        <span class="w-2 h-2 rounded-full bg-emerald-500 inline-block animate-pulse"></span>
-                        Model: <strong class="text-slate-300 font-medium">Gemini 2.5 Flash</strong>
-                    </span>
-                    <span class="hidden sm:inline">Göndermek için <kbd class="px-1 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-300 font-mono text-[10px]">Enter</kbd>, yeni satır için <kbd class="px-1 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-300 font-mono text-[10px]">Shift+Enter</kbd></span>
-                </div>
-            </form>
-        </div>
-    </main>
-
-    <!-- API Key Ayar Modalı -->
-    <div id="apiKeyModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
-        <div class="glass-panel max-w-md w-full p-6 rounded-2xl border border-slate-700/80 shadow-2xl relative">
-            <button id="closeApiKeyModal" class="absolute top-4 right-4 text-slate-400 hover:text-white">
-                <i class="fa-solid fa-xmark text-lg"></i>
-            </button>
-
-            <div class="flex items-center space-x-3 mb-4">
-                <div class="p-3 bg-amber-500/20 text-amber-400 rounded-xl border border-amber-500/30">
-                    <i class="fa-solid fa-key text-xl"></i>
-                </div>
-                <div>
-                    <h3 class="text-base font-bold text-white">Gemini API Anahtarı</h3>
-                    <p class="text-xs text-slate-400">Yapay zekanın çalışması için gerekli anahtar</p>
-                </div>
-            </div>
-
-            <p class="text-xs text-slate-300 leading-relaxed mb-4">
-                Google AI Studio'dan aldığınız API anahtarını buraya ekleyebilirsiniz. Anahtar sadece sizin tarayıcınızda güvenle saklanır.
-            </p>
-
-            <div class="space-y-3">
-                <input 
-                    type="password" 
-                    id="apiKeyInput" 
-                    placeholder="AIzaSy..." 
-                    class="w-full bg-slate-900 border border-slate-700 focus:border-indigo-500 rounded-xl px-3.5 py-2.5 text-sm text-slate-100 placeholder-slate-600 focus:outline-none transition">
-
-                <div class="flex justify-between items-center pt-2">
-                    <a href="https://aistudio.google.com/app/apikey" target="_blank" class="text-xs text-indigo-400 hover:underline flex items-center gap-1">
-                        <span>API Anahtarı Al</span>
-                        <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
-                    </a>
-                    
-                    <button id="saveApiKeyBtn" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-semibold transition">
-                        Kaydet ve Kullan
-                    </button>
-                </div>
-            </div>
-        </div>
+  <!-- Header -->
+  <header>
+    <div class="brand">
+      <div class="logo">V</div>
+      <div class="title-group">
+        <h1>VEXcode AI <span class="version-tag">v2.0</span></h1>
+        <div class="team-info">Ekip: Veyra | Lyra | Veylox | Aria</div>
+      </div>
     </div>
+    <div class="header-actions">
+      <button class="btn" id="apiKeyBtn">🔑 API Anahtarı</button>
+      <button class="btn" id="clearBtn">🗑️ Temizle</button>
+    </div>
+  </header>
 
-    <!-- JS Mantık Kodu -->
-    <script>
-        let isSearchGroundingActive = true;
-        let chatHistory = [];
-        const MODEL_NAME = "gemini-2.5-flash";
+  <!-- Banner -->
+  <div class="banner" id="banner">
+    <div class="banner-text">
+      <span>💡 <b>BİLİMSEL YAPAY ZEKA MOTORU:</b> Evren, kuantum fiziği, kodlama, matematik ve tüm kanıtlanmış bilimsel konular hakkında soru sorabilirsiniz.</span>
+    </div>
+    <button class="close-banner" onclick="document.getElementById('banner').remove()">✕</button>
+  </div>
 
-        // DOM Elemanları
-        const chatContainer = document.getElementById('chatContainer');
-        const emptyState = document.getElementById('emptyState');
-        const chatForm = document.getElementById('chatForm');
-        const userInput = document.getElementById('userInput');
-        const sendBtn = document.getElementById('sendBtn');
-        const clearChatBtn = document.getElementById('clearChatBtn');
-        const toggleGroundingBtn = document.getElementById('toggleGroundingBtn');
-        const groundingIcon = document.getElementById('groundingIcon');
-        const groundingText = document.getElementById('groundingText');
+  <!-- Chat Area -->
+  <main id="chatWindow">
+    <div class="chat-bubble bot-msg">Merhaba! Ben VEXcode AI. Bilimsel, teknik veya genel konularda size nasıl yardımcı olabilirim?</div>
+  </main>
 
-        // Modal Elemanları
-        const apiKeyModal = document.getElementById('apiKeyModal');
-        const openApiKeyModalBtn = document.getElementById('openApiKeyModal');
-        const closeApiKeyModalBtn = document.getElementById('closeApiKeyModal');
-        const saveApiKeyBtn = document.getElementById('saveApiKeyBtn');
-        const apiKeyInput = document.getElementById('apiKeyInput');
+  <!-- Footer Input Area -->
+  <footer>
+    <div class="input-container">
+      <textarea id="userInput" placeholder="Bir soru sorun veya bir konu yazın..." rows="1"></textarea>
+      <button class="send-btn" id="sendBtn">➔</button>
+    </div>
+  </footer>
 
-        // Marked Yapılandırması
-        marked.setOptions({
-            highlight: function(code, lang) {
-                if (lang && hljs.getLanguage(lang)) {
-                    return hljs.highlight(code, { language: lang }).value;
-                }
-                return hljs.highlightAuto(code).value;
-            },
-            breaks: true
+  <!-- API Key Modal -->
+  <div class="modal-overlay hidden" id="apiModal">
+    <div class="modal">
+      <h2>Google Gemini API Anahtarı</h2>
+      <p>Sitenin yapay zeka yanıtları verebilmesi için geçerli bir Gemini API anahtarına ihtiyacı vardır. Anahtarınız yalnızca tarayıcınızda saklanır.</p>
+      <input type="password" id="apiKeyInput" placeholder="AIzaSy..." />
+      <div class="modal-actions">
+        <button class="btn" id="closeModalBtn">İptal</button>
+        <button class="btn btn-primary" id="saveKeyBtn">Kaydet</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const chatWindow = document.getElementById('chatWindow');
+    const userInput = document.getElementById('userInput');
+    const sendBtn = document.getElementById('sendBtn');
+    const apiModal = document.getElementById('apiModal');
+    const apiKeyBtn = document.getElementById('apiKeyBtn');
+    const apiKeyInput = document.getElementById('apiKeyInput');
+    const saveKeyBtn = document.getElementById('saveKeyBtn');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    const clearBtn = document.getElementById('clearBtn');
+
+    // Load saved API Key
+    let apiKey = localStorage.getItem('vex_gemini_api_key') || '';
+
+    // Auto resize textarea
+    userInput.addEventListener('input', () => {
+      userInput.style.height = 'auto';
+      userInput.style.height = userInput.scrollHeight + 'px';
+    });
+
+    // Enter to send (Shift+Enter for newline)
+    userInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendMessage();
+      }
+    });
+
+    sendBtn.addEventListener('click', sendMessage);
+
+    // Modal Events
+    apiKeyBtn.addEventListener('click', () => {
+      apiKeyInput.value = apiKey;
+      apiModal.classList.remove('hidden');
+    });
+
+    closeModalBtn.addEventListener('click', () => {
+      apiModal.classList.add('hidden');
+    });
+
+    saveKeyBtn.addEventListener('click', () => {
+      const val = apiKeyInput.value.trim();
+      if (val) {
+        apiKey = val;
+        localStorage.setItem('vex_gemini_api_key', val);
+        alert('API Anahtarı başarıyla kaydedildi!');
+        apiModal.classList.add('hidden');
+      } else {
+        alert('Lütfen geçerli bir anahtar girin.');
+      }
+    });
+
+    clearBtn.addEventListener('click', () => {
+      chatWindow.innerHTML = '<div class="chat-bubble bot-msg">Sohbet temizlendi. Nasıl yardımcı olabilirim?</div>';
+    });
+
+    // Send Message Logic
+    async function sendMessage() {
+      const text = userInput.value.trim();
+      if (!text) return;
+
+      if (!apiKey) {
+        alert('Lütfen önce sağ üstteki "API Anahtarı" butonuna tıklayarak Gemini API anahtarınızı girin.');
+        apiModal.classList.remove('hidden');
+        return;
+      }
+
+      // Append User Bubble
+      appendBubble(text, 'user-msg');
+      userInput.value = '';
+      userInput.style.height = 'auto';
+
+      // Append Loading Bot Bubble
+      const botBubble = appendBubble('Düşünüyor...', 'bot-msg');
+      sendBtn.disabled = true;
+
+      try {
+        const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+        
+        const response = await fetch(endpoint, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            contents: [
+              {
+                parts: [
+                  {
+                    text: "Sen VEXcode AI bilimsel ve teknik asistanısın. Kullanıcının sorusuna bilimsel olarak kanıtlanmış gerçeklere dayanarak Türkçe ve anlaşılır cevap ver.\n\nSoru: " + text
+                  }
+                ]
+              }
+            ]
+          })
         });
 
-        // Sayfa Yüklendiğinde
-        window.addEventListener('DOMContentLoaded', () => {
-            loadLocalHistory();
-            const savedKey = localStorage.getItem('vex_ai_custom_api_key');
-            if (savedKey) {
-                apiKeyInput.value = savedKey;
-            }
-        });
+        const data = await response.json();
 
-        // Modal Kontrolleri
-        openApiKeyModalBtn.addEventListener('click', () => {
-            apiKeyModal.classList.remove('hidden');
-        });
-
-        closeApiKeyModalBtn.addEventListener('click', () => {
-            apiKeyModal.classList.add('hidden');
-        });
-
-        saveApiKeyBtn.addEventListener('click', () => {
-            const val = apiKeyInput.value.trim();
-            if (val) {
-                localStorage.setItem('vex_ai_custom_api_key', val);
-                alert("API Anahtarınız kaydedildi!");
-            } else {
-                localStorage.removeItem('vex_ai_custom_api_key');
-                alert("Özel API Anahtarı kaldırıldı.");
-            }
-            apiKeyModal.classList.add('hidden');
-        });
-
-        // Otomatik Uzayan Textarea Ayarı
-        userInput.addEventListener('input', function() {
-            this.style.height = 'auto';
-            this.style.height = (this.scrollHeight) + 'px';
-        });
-
-        // Enter ile Gönderme (Shift+Enter Alt Satır)
-        userInput.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                chatForm.dispatchEvent(new Event('submit'));
-            }
-        });
-
-        // Hazır Soru Kartlarını Textarea'ya Aktar
-        function setPrompt(text) {
-            userInput.value = text;
-            userInput.style.height = 'auto';
-            userInput.style.height = (userInput.scrollHeight) + 'px';
-            userInput.focus();
+        if (!response.ok) {
+          const errDetail = data.error ? `${data.error.message} (${data.error.status})` : 'Bilinmeyen API Hatası';
+          botBubble.className = 'chat-bubble error-msg';
+          botBubble.innerText = `API Hatası: ${errDetail}`;
+        } else if (data.candidates && data.candidates[0]?.content?.parts[0]?.text) {
+          botBubble.innerText = data.candidates[0].content.parts[0].text;
+        } else {
+          botBubble.className = 'chat-bubble error-msg';
+          botBubble.innerText = 'Yanıt alınamadı veya boş döndü.';
         }
+      } catch (err) {
+        botBubble.className = 'chat-bubble error-msg';
+        botBubble.innerText = 'Bağlantı Hatası: ' + err.message;
+      } finally {
+        sendBtn.disabled = false;
+        scrollToBottom();
+      }
+    }
 
-        // Canlı Arama Modu Aç/Kapa
-        toggleGroundingBtn.addEventListener('click', () => {
-            isSearchGroundingActive = !isSearchGroundingActive;
-            if (isSearchGroundingActive) {
-                groundingIcon.className = "fa-solid fa-globe text-cyan-400";
-                groundingText.innerText = "Canlı Bilim Araması: Açık";
-                toggleGroundingBtn.className = "flex items-center space-x-1.5 px-2.5 py-1.5 rounded-xl border border-indigo-500/30 bg-indigo-950/40 text-indigo-300 hover:bg-indigo-900/50 transition text-xs font-medium";
-            } else {
-                groundingIcon.className = "fa-solid fa-ban text-slate-400";
-                groundingText.innerText = "Canlı Bilim Araması: Kapalı";
-                toggleGroundingBtn.className = "flex items-center space-x-1.5 px-2.5 py-1.5 rounded-xl border border-slate-700 bg-slate-800/40 text-slate-400 hover:bg-slate-800 transition text-xs font-medium";
-            }
-        });
+    function appendBubble(text, className) {
+      const bubble = document.createElement('div');
+      bubble.className = `chat-bubble ${className}`;
+      bubble.innerText = text;
+      chatWindow.appendChild(bubble);
+      scrollToBottom();
+      return bubble;
+    }
 
-        // Form Gönderme
-        chatForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const message = userInput.value.trim();
-            if (!message) return;
-
-            userInput.value = '';
-            userInput.style.height = 'auto';
-
-            if (emptyState) emptyState.style.display = 'none';
-
-            appendUserMessage(message);
-            chatHistory.push({ role: 'user', parts: [{ text: message }] });
-
-            const loadingId = appendLoadingMessage();
-
-            try {
-                const responseData = await queryGeminiAPI(message);
-                removeMessage(loadingId);
-                
-                const responseText = responseData.text;
-                const sources = responseData.sources || [];
-
-                appendBotMessage(responseText, sources);
-
-                chatHistory.push({ role: 'model', parts: [{ text: responseText }] });
-                saveLocalHistory();
-
-            } catch (error) {
-                console.error('API Hatası:', error);
-                removeMessage(loadingId);
-                
-                const savedKey = localStorage.getItem('vex_ai_custom_api_key');
-                if (!savedKey) {
-                    appendErrorMessage("API Anahtarı eksik veya hatalı olabilir. Lütfen sağ üstteki '🔑 API Anahtarı' butonuna tıklayarak geçerli anahtarınızı ekleyin.");
-                } else {
-                    appendErrorMessage("Yapay zekaya erişirken bir sorun oluştu. Lütfen API anahtarınızı kontrol edin veya tekrar deneyin.");
-                }
-            }
-        });
-
-        // Gemini API Çağrısı
-        async function queryGeminiAPI(prompt, retries = 2, delay = 1000) {
-            const customKey = localStorage.getItem('vex_ai_custom_api_key') || "";
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL_NAME}:generateContent?key=${customKey}`;
-            
-            const systemPrompt = "Sen VEXcode AI bilimsel bilgi ve teknoloji asistanısın. Yanıtlarını her zaman Türkçe, net, anlaşılır, kanıtlanmış bilimsel gerçeklere ve mantığa dayalı olarak ver. Kodlama sorularında açıklayıcı ve çalışır kod örnekleri sun.";
-
-            const payload = {
-                contents: chatHistory,
-                systemInstruction: {
-                    parts: [{ text: systemPrompt }]
-                }
-            };
-
-            if (isSearchGroundingActive) {
-                payload.tools = [{ "google_search": {} }];
-            }
-
-            for (let i = 0; i < retries; i++) {
-                try {
-                    const res = await fetch(apiUrl, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
-                    });
-
-                    if (!res.ok) {
-                        throw new Error(`HTTP Hata koda: ${res.status}`);
-                    }
-
-                    const result = await res.json();
-                    const candidate = result.candidates?.[0];
-
-                    if (candidate && candidate.content?.parts?.[0]?.text) {
-                        const text = candidate.content.parts[0].text;
-                        
-                        let sources = [];
-                        const groundingMetadata = candidate.groundingMetadata;
-                        if (groundingMetadata && groundingMetadata.groundingAttributions) {
-                            sources = groundingMetadata.groundingAttributions
-                                .map(attr => ({
-                                    uri: attr.web?.uri,
-                                    title: attr.web?.title
-                                }))
-                                .filter(src => src.uri && src.title);
-                        }
-
-                        return { text, sources };
-                    } else {
-                        throw new Error("Yanıt formatı geçersiz.");
-                    }
-                } catch (err) {
-                    if (i === retries - 1) throw err;
-                    await new Promise(r => setTimeout(r, delay * Math.pow(2, i)));
-                }
-            }
-        }
-
-        function appendUserMessage(text) {
-            const msgDiv = document.createElement('div');
-            msgDiv.className = 'flex justify-end gap-2.5 mb-3';
-            msgDiv.innerHTML = `
-                <div class="max-w-[85%] sm:max-w-[75%] bg-indigo-600 text-white p-3.5 rounded-2xl rounded-tr-none shadow-md shadow-indigo-600/20 text-sm leading-relaxed">
-                    ${escapeHtml(text)}
-                </div>
-                <div class="w-8 h-8 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center text-xs font-bold text-slate-300 flex-shrink-0">
-                    Sen
-                </div>
-            `;
-            chatContainer.appendChild(msgDiv);
-            scrollToBottom();
-        }
-
-        function appendBotMessage(markdownText, sources = []) {
-            const msgDiv = document.createElement('div');
-            msgDiv.className = 'flex gap-2.5 mb-3';
-            
-            const renderedHtml = marked.parse(markdownText);
-            
-            let sourcesHtml = '';
-            if (sources.length > 0) {
-                const uniqueSources = Array.from(new Set(sources.map(s => s.uri)))
-                    .map(uri => sources.find(s => s.uri === uri));
-
-                sourcesHtml = `
-                    <div class="mt-3 pt-3 border-t border-slate-800 text-xs">
-                        <span class="text-slate-400 font-semibold block mb-1.5 flex items-center gap-1.5">
-                            <i class="fa-solid fa-bookmark text-indigo-400"></i> Doğrulanmış Bilimsel Kaynaklar:
-                        </span>
-                        <div class="flex flex-wrap gap-2">
-                            ${uniqueSources.slice(0, 5).map(s => `
-                                <a href="${escapeHtml(s.uri)}" target="_blank" rel="noopener noreferrer" class="px-2.5 py-1 rounded-md bg-slate-800/80 border border-slate-700 text-cyan-400 hover:underline hover:bg-slate-800 text-[11px] truncate max-w-[220px] inline-block">
-                                    <i class="fa-solid fa-arrow-up-right-from-square text-[9px] mr-1"></i>${escapeHtml(s.title || 'Kaynak')}
-                                </a>
-                            `).join('')}
-                        </div>
-                    </div>
-                `;
-            }
-
-            msgDiv.innerHTML = `
-                <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-indigo-600 to-cyan-500 flex items-center justify-center text-xs font-bold text-white flex-shrink-0 shadow-md shadow-indigo-500/20">
-                    V
-                </div>
-                <div class="max-w-[88%] sm:max-w-[80%] glass-panel bg-slate-900/90 text-slate-200 p-4 rounded-2xl rounded-tl-none border border-slate-800/80 text-sm shadow-sm overflow-hidden">
-                    <div class="markdown-content">
-                        ${renderedHtml}
-                    </div>
-                    ${sourcesHtml}
-                </div>
-            `;
-            
-            chatContainer.appendChild(msgDiv);
-            scrollToBottom();
-        }
-
-        function appendLoadingMessage() {
-            const id = 'loading-' + Date.now();
-            const msgDiv = document.createElement('div');
-            msgDiv.id = id;
-            msgDiv.className = 'flex gap-2.5 mb-3';
-            msgDiv.innerHTML = `
-                <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-indigo-600 to-cyan-500 flex items-center justify-center text-xs font-bold text-white flex-shrink-0 shadow-md shadow-indigo-500/20">
-                    V
-                </div>
-                <div class="glass-panel bg-slate-900/90 text-slate-400 px-4 py-3 rounded-2xl rounded-tl-none border border-slate-800/80 text-xs flex items-center space-x-2">
-                    <i class="fa-solid fa-circle-notch animate-spin text-indigo-400"></i>
-                    <span>Bilimsel kaynaklar taranıyor ve yanıt hesaplanıyor...</span>
-                </div>
-            `;
-            chatContainer.appendChild(msgDiv);
-            scrollToBottom();
-            return id;
-        }
-
-        function appendErrorMessage(errorMsg) {
-            const msgDiv = document.createElement('div');
-            msgDiv.className = 'flex gap-2.5 mb-3';
-            msgDiv.innerHTML = `
-                <div class="w-8 h-8 rounded-xl bg-rose-600/20 border border-rose-500/30 flex items-center justify-center text-xs font-bold text-rose-400 flex-shrink-0">
-                    !
-                </div>
-                <div class="bg-rose-950/30 border border-rose-900/50 text-rose-300 p-3.5 rounded-2xl rounded-tl-none text-xs">
-                    ${escapeHtml(errorMsg)}
-                </div>
-            `;
-            chatContainer.appendChild(msgDiv);
-            scrollToBottom();
-        }
-
-        function removeMessage(id) {
-            const el = document.getElementById(id);
-            if (el) el.remove();
-        }
-
-        function scrollToBottom() {
-            chatContainer.scrollTop = chatContainer.scrollHeight;
-        }
-
-        function escapeHtml(text) {
-            return text
-                .replace(/&/g, "&amp;")
-                .replace(/</g, "&lt;")
-                .replace(/>/g, "&gt;")
-                .replace(/"/g, "&quot;")
-                .replace(/'/g, "&#039;");
-        }
-
-        clearChatBtn.addEventListener('click', () => {
-            chatHistory = [];
-            localStorage.removeItem('vex_ai_chat_history_tr');
-            chatContainer.innerHTML = '';
-            chatContainer.appendChild(emptyState);
-            emptyState.style.display = 'block';
-        });
-
-        function saveLocalHistory() {
-            try {
-                const recentHistory = chatHistory.slice(-20);
-                localStorage.setItem('vex_ai_chat_history_tr', JSON.stringify(recentHistory));
-            } catch (e) {
-                console.warn('Hafızaya yazılamadı', e);
-            }
-        }
-
-        function loadLocalHistory() {
-            try {
-                const saved = localStorage.getItem('vex_ai_chat_history_tr');
-                if (saved) {
-                    chatHistory = JSON.parse(saved);
-                    if (chatHistory.length > 0) {
-                        if (emptyState) emptyState.style.display = 'none';
-                        chatHistory.forEach(msg => {
-                            if (msg.role === 'user') {
-                                appendUserMessage(msg.parts[0].text);
-                            } else if (msg.role === 'model') {
-                                appendBotMessage(msg.parts[0].text);
-                            }
-                        });
-                    }
-                }
-            } catch (e) {
-                console.warn('Hafızadan okunamadı', e);
-            }
-        }
-    </script>
+    function scrollToBottom() {
+      chatWindow.scrollTop = chatWindow.scrollHeight;
+    }
+  </script>
 </body>
 </html>
-```
