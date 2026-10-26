@@ -247,7 +247,7 @@
       <div class="brand">
         <div class="logo">V</div>
         <div class="title-group">
-          <h1>VEXcode AI <span class="version-tag">v2.4</span></h1>
+          <h1>VEXcode AI <span class="version-tag">v2.5</span></h1>
           <div class="team-info">Ekip: Veyra | Lyra | Veylox | Aria</div>
         </div>
       </div>
@@ -347,8 +347,8 @@
       sendBtn.disabled = true;
 
       try {
-        // En kararlı ve ücretsiz katmanda sorunsuz çalışan model
-        const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+        // En güncel ve tüm yeni Google AI Studio hesaplarında varsayılan açık olan model uç noktası
+        const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
         
         const response = await fetch(endpoint, {
           method: 'POST',
