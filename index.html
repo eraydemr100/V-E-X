@@ -54,7 +54,7 @@
 
         /* Glassmorphism effects */
         .glass-panel {
-            background: rgba(15, 23, 42, 0.82);
+            background: rgba(15, 23, 42, 0.85);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             border: 1px solid rgba(255, 255, 255, 0.08);
@@ -121,7 +121,6 @@
             background: rgba(30, 41, 59, 0.8);
         }
 
-        /* Smooth Mobile Keyboard Optimization */
         html, body {
             height: 100%;
             overflow: hidden;
@@ -131,26 +130,32 @@
 <body class="bg-vex-950 text-slate-100 h-full flex flex-col font-sans antialiased selection:bg-indigo-500 selection:text-white">
 
     <!-- Üst Gezinme Çubuğu (Header) -->
-    <header class="h-16 border-b border-slate-800/80 glass-panel flex-shrink-0 z-30 flex items-center justify-between px-4 md:px-6">
+    <header class="h-16 border-b border-slate-800/80 glass-panel flex-shrink-0 z-30 flex items-center justify-between px-3 md:px-6">
         <div class="flex items-center space-x-3">
             <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-cyan-400 flex items-center justify-center shadow-lg shadow-indigo-500/20">
                 <i class="fa-solid text-xl text-white font-black">V</i>
             </div>
             <div>
                 <div class="flex items-center space-x-2">
-                    <span class="font-bold text-lg tracking-tight bg-gradient-to-r from-white via-slate-200 to-indigo-300 bg-clip-text text-transparent">VEXcode AI</span>
-                    <span class="text-[10px] font-semibold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 px-2 py-0.5 rounded-full uppercase tracking-wider">v3.0</span>
+                    <span class="font-bold text-base sm:text-lg tracking-tight bg-gradient-to-r from-white via-slate-200 to-indigo-300 bg-clip-text text-transparent">VEXcode AI</span>
+                    <span class="text-[10px] font-semibold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 px-2 py-0.5 rounded-full uppercase tracking-wider">v1.0</span>
                 </div>
                 <p class="text-[11px] text-slate-400 hidden sm:block">Ekip: Veyra, Lyra, Veylox & Aria</p>
             </div>
         </div>
 
         <!-- İşlem Butonları -->
-        <div class="flex items-center space-x-2.5">
+        <div class="flex items-center space-x-1.5 sm:space-x-2">
+            <!-- API Anahtarı Butonu -->
+            <button id="openApiKeyModal" class="flex items-center space-x-1.5 px-2.5 py-1.5 rounded-xl border border-amber-500/30 bg-amber-500/10 text-amber-300 hover:bg-amber-500/20 transition text-xs font-medium">
+                <i class="fa-solid fa-key text-amber-400"></i>
+                <span class="hidden sm:inline">API Anahtarı</span>
+            </button>
+
             <!-- Canlı İnternet / Bilim Araması Modu -->
-            <button id="toggleGroundingBtn" class="flex items-center space-x-2 px-3 py-1.5 rounded-xl border border-indigo-500/30 bg-indigo-950/40 text-indigo-300 hover:bg-indigo-900/50 transition text-xs font-medium">
+            <button id="toggleGroundingBtn" class="flex items-center space-x-1.5 px-2.5 py-1.5 rounded-xl border border-indigo-500/30 bg-indigo-950/40 text-indigo-300 hover:bg-indigo-900/50 transition text-xs font-medium">
                 <i class="fa-solid fa-globe text-cyan-400" id="groundingIcon"></i>
-                <span class="hidden sm:inline" id="groundingText">Canlı Bilim Araması: Açık</span>
+                <span class="hidden md:inline" id="groundingText">Canlı Bilim Araması: Açık</span>
             </button>
 
             <!-- Sohbet Temizle -->
@@ -161,10 +166,10 @@
     </header>
 
     <!-- Ana Sohbet ve İçerik Alanı -->
-    <main class="flex-1 flex flex-col max-w-5xl w-full mx-auto p-3 sm:p-4 overflow-hidden">
+    <main class="flex-1 flex flex-col max-w-5xl w-full mx-auto p-2 sm:p-4 overflow-hidden">
 
         <!-- Bilgilendirme Kartı -->
-        <div id="introCard" class="glass-panel p-3.5 sm:p-4 rounded-2xl mb-3 relative overflow-hidden flex-shrink-0 transition-all duration-300">
+        <div id="introCard" class="glass-panel p-3 sm:p-4 rounded-2xl mb-2.5 relative overflow-hidden flex-shrink-0 transition-all duration-300">
             <button onclick="document.getElementById('introCard').style.display='none'" class="absolute top-3 right-3 text-slate-400 hover:text-white p-1">
                 <i class="fa-solid fa-xmark text-sm"></i>
             </button>
@@ -216,14 +221,14 @@
             <!-- Mesajlar Buraya Dinamik Eklenir -->
         </div>
 
-        <!-- Yazma / Klavye Input Alanı (Sabit ve Kolay Erişimli) -->
-        <div class="mt-3 relative glass-panel rounded-2xl p-2 sm:p-3 flex-shrink-0">
+        <!-- Yazma / Klavye Input Alanı -->
+        <div class="mt-2.5 relative glass-panel rounded-2xl p-2 sm:p-3 flex-shrink-0">
             <form id="chatForm" class="flex flex-col gap-2">
                 <div class="flex items-end gap-2">
                     <textarea 
                         id="userInput" 
                         rows="1" 
-                        placeholder="Bir soru sorun veya bir fikir yazın... (Klavye otomatik açılır)" 
+                        placeholder="Bir soru sorun veya bir fikir yazın..." 
                         class="flex-1 bg-slate-900/60 text-slate-100 placeholder-slate-500 text-sm focus:outline-none resize-none px-3.5 py-2.5 rounded-xl border border-slate-700/60 focus:border-indigo-500/80 transition max-h-32 scrollbar-thin"
                         required></textarea>
                     
@@ -238,7 +243,7 @@
                 <div class="flex items-center justify-between px-2 text-[11px] text-slate-400 border-t border-slate-800/80 pt-2">
                     <span class="flex items-center gap-1.5">
                         <span class="w-2 h-2 rounded-full bg-emerald-500 inline-block animate-pulse"></span>
-                        Model: <strong class="text-slate-300 font-medium">Gemini 3 Flash</strong>
+                        Model: <strong class="text-slate-300 font-medium">Gemini 2.5 Flash</strong>
                     </span>
                     <span class="hidden sm:inline">Göndermek için <kbd class="px-1 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-300 font-mono text-[10px]">Enter</kbd>, yeni satır için <kbd class="px-1 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-300 font-mono text-[10px]">Shift+Enter</kbd></span>
                 </div>
@@ -246,13 +251,53 @@
         </div>
     </main>
 
+    <!-- API Key Ayar Modalı -->
+    <div id="apiKeyModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+        <div class="glass-panel max-w-md w-full p-6 rounded-2xl border border-slate-700/80 shadow-2xl relative">
+            <button id="closeApiKeyModal" class="absolute top-4 right-4 text-slate-400 hover:text-white">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+
+            <div class="flex items-center space-x-3 mb-4">
+                <div class="p-3 bg-amber-500/20 text-amber-400 rounded-xl border border-amber-500/30">
+                    <i class="fa-solid fa-key text-xl"></i>
+                </div>
+                <div>
+                    <h3 class="text-base font-bold text-white">Gemini API Anahtarı</h3>
+                    <p class="text-xs text-slate-400">Yapay zekanın çalışması için gerekli anahtar</p>
+                </div>
+            </div>
+
+            <p class="text-xs text-slate-300 leading-relaxed mb-4">
+                Google AI Studio'dan aldığınız API anahtarını buraya ekleyebilirsiniz. Anahtar sadece sizin tarayıcınızda güvenle saklanır.
+            </p>
+
+            <div class="space-y-3">
+                <input 
+                    type="password" 
+                    id="apiKeyInput" 
+                    placeholder="AIzaSy..." 
+                    class="w-full bg-slate-900 border border-slate-700 focus:border-indigo-500 rounded-xl px-3.5 py-2.5 text-sm text-slate-100 placeholder-slate-600 focus:outline-none transition">
+
+                <div class="flex justify-between items-center pt-2">
+                    <a href="https://aistudio.google.com/app/apikey" target="_blank" class="text-xs text-indigo-400 hover:underline flex items-center gap-1">
+                        <span>API Anahtarı Al</span>
+                        <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                    </a>
+                    
+                    <button id="saveApiKeyBtn" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-semibold transition">
+                        Kaydet ve Kullan
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- JS Mantık Kodu -->
     <script>
-        // Sistem Durumu
         let isSearchGroundingActive = true;
         let chatHistory = [];
-        const API_KEY = "";
-        const MODEL_NAME = "gemini-3-flash-preview";
+        const MODEL_NAME = "gemini-2.5-flash";
 
         // DOM Elemanları
         const chatContainer = document.getElementById('chatContainer');
@@ -264,6 +309,13 @@
         const toggleGroundingBtn = document.getElementById('toggleGroundingBtn');
         const groundingIcon = document.getElementById('groundingIcon');
         const groundingText = document.getElementById('groundingText');
+
+        // Modal Elemanları
+        const apiKeyModal = document.getElementById('apiKeyModal');
+        const openApiKeyModalBtn = document.getElementById('openApiKeyModal');
+        const closeApiKeyModalBtn = document.getElementById('closeApiKeyModal');
+        const saveApiKeyBtn = document.getElementById('saveApiKeyBtn');
+        const apiKeyInput = document.getElementById('apiKeyInput');
 
         // Marked Yapılandırması
         marked.setOptions({
@@ -279,6 +331,31 @@
         // Sayfa Yüklendiğinde
         window.addEventListener('DOMContentLoaded', () => {
             loadLocalHistory();
+            const savedKey = localStorage.getItem('vex_ai_custom_api_key');
+            if (savedKey) {
+                apiKeyInput.value = savedKey;
+            }
+        });
+
+        // Modal Kontrolleri
+        openApiKeyModalBtn.addEventListener('click', () => {
+            apiKeyModal.classList.remove('hidden');
+        });
+
+        closeApiKeyModalBtn.addEventListener('click', () => {
+            apiKeyModal.classList.add('hidden');
+        });
+
+        saveApiKeyBtn.addEventListener('click', () => {
+            const val = apiKeyInput.value.trim();
+            if (val) {
+                localStorage.setItem('vex_ai_custom_api_key', val);
+                alert("API Anahtarınız kaydedildi!");
+            } else {
+                localStorage.removeItem('vex_ai_custom_api_key');
+                alert("Özel API Anahtarı kaldırıldı.");
+            }
+            apiKeyModal.classList.add('hidden');
         });
 
         // Otomatik Uzayan Textarea Ayarı
@@ -295,7 +372,7 @@
             }
         });
 
-        // Hazır Soru Kartlarını Textarea'ya Aktar ve Klavyeyi Odakla
+        // Hazır Soru Kartlarını Textarea'ya Aktar
         function setPrompt(text) {
             userInput.value = text;
             userInput.style.height = 'auto';
@@ -303,17 +380,17 @@
             userInput.focus();
         }
 
-        // Canlı Arama/Grounding Modu Aç/Kapa
+        // Canlı Arama Modu Aç/Kapa
         toggleGroundingBtn.addEventListener('click', () => {
             isSearchGroundingActive = !isSearchGroundingActive;
             if (isSearchGroundingActive) {
                 groundingIcon.className = "fa-solid fa-globe text-cyan-400";
                 groundingText.innerText = "Canlı Bilim Araması: Açık";
-                toggleGroundingBtn.className = "flex items-center space-x-2 px-3 py-1.5 rounded-xl border border-indigo-500/30 bg-indigo-950/40 text-indigo-300 hover:bg-indigo-900/50 transition text-xs font-medium";
+                toggleGroundingBtn.className = "flex items-center space-x-1.5 px-2.5 py-1.5 rounded-xl border border-indigo-500/30 bg-indigo-950/40 text-indigo-300 hover:bg-indigo-900/50 transition text-xs font-medium";
             } else {
                 groundingIcon.className = "fa-solid fa-ban text-slate-400";
                 groundingText.innerText = "Canlı Bilim Araması: Kapalı";
-                toggleGroundingBtn.className = "flex items-center space-x-2 px-3 py-1.5 rounded-xl border border-slate-700 bg-slate-800/40 text-slate-400 hover:bg-slate-800 transition text-xs font-medium";
+                toggleGroundingBtn.className = "flex items-center space-x-1.5 px-2.5 py-1.5 rounded-xl border border-slate-700 bg-slate-800/40 text-slate-400 hover:bg-slate-800 transition text-xs font-medium";
             }
         });
 
@@ -323,23 +400,16 @@
             const message = userInput.value.trim();
             if (!message) return;
 
-            // Alanı Temizle ve Yüksekliği Sıfırla
             userInput.value = '';
             userInput.style.height = 'auto';
 
-            // İlk ekranı gizle
             if (emptyState) emptyState.style.display = 'none';
 
-            // Kullanıcı Mesajını Ekle
             appendUserMessage(message);
-
-            // Geçmişe Ekle
             chatHistory.push({ role: 'user', parts: [{ text: message }] });
 
-            // Yükleniyor Göstergesi
             const loadingId = appendLoadingMessage();
 
-            // Yapay Zeka Yanıtı Al
             try {
                 const responseData = await queryGeminiAPI(message);
                 removeMessage(loadingId);
@@ -347,25 +417,30 @@
                 const responseText = responseData.text;
                 const sources = responseData.sources || [];
 
-                // AI Mesajını Göster
                 appendBotMessage(responseText, sources);
 
-                // Geçmişe Ekle & Kaydet
                 chatHistory.push({ role: 'model', parts: [{ text: responseText }] });
                 saveLocalHistory();
 
             } catch (error) {
                 console.error('API Hatası:', error);
                 removeMessage(loadingId);
-                appendErrorMessage("Bilimsel verilere erişilirken bir hata oluştu. Lütfen tekrar deneyin.");
+                
+                const savedKey = localStorage.getItem('vex_ai_custom_api_key');
+                if (!savedKey) {
+                    appendErrorMessage("API Anahtarı eksik veya hatalı olabilir. Lütfen sağ üstteki '🔑 API Anahtarı' butonuna tıklayarak geçerli anahtarınızı ekleyin.");
+                } else {
+                    appendErrorMessage("Yapay zekaya erişirken bir sorun oluştu. Lütfen API anahtarınızı kontrol edin veya tekrar deneyin.");
+                }
             }
         });
 
         // Gemini API Çağrısı
-        async function queryGeminiAPI(prompt, retries = 3, delay = 1000) {
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL_NAME}:generateContent?key=${API_KEY}`;
+        async function queryGeminiAPI(prompt, retries = 2, delay = 1000) {
+            const customKey = localStorage.getItem('vex_ai_custom_api_key') || "";
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL_NAME}:generateContent?key=${customKey}`;
             
-            const systemPrompt = "Sen VEXcode AI bilimsel bilgi ve teknoloji asistanısın. Yanıtlarını her zaman Türkçe, net, anlaşılır, kanıtlanmış bilimsel gerçeklere ve mantığa dayalı olarak ver. Kodlama sorularında açıklayıcı ve çalışır kod örnekleri sun. Türkçe dili kurallarına özen göster.";
+            const systemPrompt = "Sen VEXcode AI bilimsel bilgi ve teknoloji asistanısın. Yanıtlarını her zaman Türkçe, net, anlaşılır, kanıtlanmış bilimsel gerçeklere ve mantığa dayalı olarak ver. Kodlama sorularında açıklayıcı ve çalışır kod örnekleri sun.";
 
             const payload = {
                 contents: chatHistory,
@@ -418,7 +493,6 @@
             }
         }
 
-        // Kullanıcı Mesajı Arayüzü
         function appendUserMessage(text) {
             const msgDiv = document.createElement('div');
             msgDiv.className = 'flex justify-end gap-2.5 mb-3';
@@ -434,7 +508,6 @@
             scrollToBottom();
         }
 
-        // AI Bot Mesajı Arayüzü
         function appendBotMessage(markdownText, sources = []) {
             const msgDiv = document.createElement('div');
             msgDiv.className = 'flex gap-2.5 mb-3';
@@ -478,7 +551,6 @@
             scrollToBottom();
         }
 
-        // Yükleniyor Durumu
         function appendLoadingMessage() {
             const id = 'loading-' + Date.now();
             const msgDiv = document.createElement('div');
@@ -498,7 +570,6 @@
             return id;
         }
 
-        // Hata Mesajı
         function appendErrorMessage(errorMsg) {
             const msgDiv = document.createElement('div');
             msgDiv.className = 'flex gap-2.5 mb-3';
@@ -514,18 +585,15 @@
             scrollToBottom();
         }
 
-        // Eleman Silme
         function removeMessage(id) {
             const el = document.getElementById(id);
             if (el) el.remove();
         }
 
-        // Aşağı Kaydır
         function scrollToBottom() {
             chatContainer.scrollTop = chatContainer.scrollHeight;
         }
 
-        // HTML Escape
         function escapeHtml(text) {
             return text
                 .replace(/&/g, "&amp;")
@@ -535,7 +603,6 @@
                 .replace(/'/g, "&#039;");
         }
 
-        // Sohbet Temizleme
         clearChatBtn.addEventListener('click', () => {
             chatHistory = [];
             localStorage.removeItem('vex_ai_chat_history_tr');
@@ -544,7 +611,6 @@
             emptyState.style.display = 'block';
         });
 
-        // Yerel Hafızaya Kaydetme
         function saveLocalHistory() {
             try {
                 const recentHistory = chatHistory.slice(-20);
@@ -554,7 +620,6 @@
             }
         }
 
-        // Yerel Hafızadan Yükleme
         function loadLocalHistory() {
             try {
                 const saved = localStorage.getItem('vex_ai_chat_history_tr');
