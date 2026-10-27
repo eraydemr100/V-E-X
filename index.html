@@ -247,7 +247,7 @@
       <div class="brand">
         <div class="logo">V</div>
         <div class="title-group">
-          <h1>VEXcode AI <span class="version-tag">v2.7</span></h1>
+          <h1>VEXcode AI <span class="version-tag">v2.8</span></h1>
           <div class="team-info">Ekip: Veyra | Lyra | Veylox | Aria</div>
         </div>
       </div>
@@ -329,6 +329,19 @@
       chatWindow.innerHTML = '<div class="chat-bubble bot-msg">Sohbet temizlendi. Bir soru sorun!</div>';
     });
 
+    async function callGemini(modelName, text) {
+      const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`;
+      return await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{
+            parts: [{ text: "Sen VEXcode AI bilimsel asistanısın. Doğrulanmış bilimsel gerçeklere dayanarak Türkçe cevap ver:\n\nSoru: " + text }]
+          }]
+        })
+      });
+    }
+
     async function sendMessage() {
       const text = userInput.value.trim();
       if (!text) return;
@@ -347,26 +360,15 @@
       sendBtn.disabled = true;
 
       try {
-        // En kararlı ve en geniş çaplı desteklenen gemini-1.5-flash modeli
-        const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
-        
-        // İstek takılırsa 15 saniyede zaman aşımına uğratacak yapı
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 15000);
+        // Önce gemini-1.5-flash modelini dene
+        let response = await callGemini('gemini-1.5-flash', text);
+        let data = await response.json();
 
-        const response = await fetch(endpoint, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            contents: [{
-              parts: [{ text: "Sen VEXcode AI bilimsel asistanısın. Doğrulanmış bilimsel gerçeklere dayanarak Türkçe cevap ver:\n\nSoru: " + text }]
-            }]
-          }),
-          signal: controller.signal
-        });
-
-        clearTimeout(timeoutId);
-        const data = await response.json();
+        // Eğer yoğunluk (high demand) hatası alınırsa gemini-1.5-pro modeline otomatik geç
+        if (!response.ok) {
+          response = await callGemini('gemini-1.5-pro', text);
+          data = await response.json();
+        }
 
         if (!response.ok) {
           const errDetail = data.error ? data.error.message : 'API Hatası';
@@ -380,11 +382,7 @@
         }
       } catch (err) {
         botBubble.className = 'chat-bubble error-msg';
-        if (err.name === 'AbortError') {
-          botBubble.innerText = 'Bağlantı Zaman Aşımı: Sunucu çok geç yanıt verdi.';
-        } else {
-          botBubble.innerText = 'Bağlantı Hatası: ' + err.message;
-        }
+        botBubble.innerText = 'Bağlantı Hatası: ' + err.message;
       } finally {
         sendBtn.disabled = false;
         scrollToBottom();
