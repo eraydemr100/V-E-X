@@ -247,7 +247,7 @@
       <div class="brand">
         <div class="logo">V</div>
         <div class="title-group">
-          <h1>VEXcode AI <span class="version-tag">v2.6</span></h1>
+          <h1>VEXcode AI <span class="version-tag">v2.7</span></h1>
           <div class="team-info">Ekip: Veyra | Lyra | Veylox | Aria</div>
         </div>
       </div>
@@ -347,9 +347,13 @@
       sendBtn.disabled = true;
 
       try {
-        // Google'ın yeni istediği gemini-3.8-flash modeli
-        const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${apiKey}`;
+        // En kararlı ve en geniş çaplı desteklenen gemini-1.5-flash modeli
+        const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
         
+        // İstek takılırsa 15 saniyede zaman aşımına uğratacak yapı
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 15000);
+
         const response = await fetch(endpoint, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -357,9 +361,11 @@
             contents: [{
               parts: [{ text: "Sen VEXcode AI bilimsel asistanısın. Doğrulanmış bilimsel gerçeklere dayanarak Türkçe cevap ver:\n\nSoru: " + text }]
             }]
-          })
+          }),
+          signal: controller.signal
         });
 
+        clearTimeout(timeoutId);
         const data = await response.json();
 
         if (!response.ok) {
@@ -370,11 +376,15 @@
           botBubble.innerText = data.candidates[0].content.parts[0].text;
         } else {
           botBubble.className = 'chat-bubble error-msg';
-          botBubble.innerText = 'Yanıt alınamadı.';
+          botBubble.innerText = 'Yapay zekadan boş yanıt döndü.';
         }
       } catch (err) {
         botBubble.className = 'chat-bubble error-msg';
-        botBubble.innerText = 'Bağlantı Hatası: ' + err.message;
+        if (err.name === 'AbortError') {
+          botBubble.innerText = 'Bağlantı Zaman Aşımı: Sunucu çok geç yanıt verdi.';
+        } else {
+          botBubble.innerText = 'Bağlantı Hatası: ' + err.message;
+        }
       } finally {
         sendBtn.disabled = false;
         scrollToBottom();
