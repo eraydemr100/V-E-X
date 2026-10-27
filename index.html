@@ -247,7 +247,7 @@
       <div class="brand">
         <div class="logo">V</div>
         <div class="title-group">
-          <h1>VEXcode AI <span class="version-tag">v2.8</span></h1>
+          <h1>VEXcode AI <span class="version-tag">v2.9</span></h1>
           <div class="team-info">Ekip: Veyra | Lyra | Veylox | Aria</div>
         </div>
       </div>
@@ -330,7 +330,7 @@
     });
 
     async function callGemini(modelName, text) {
-      const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`;
+      const endpoint = `https://generativelanguage.googleapis.com/v1/models/${modelName}:generateContent?key=${apiKey}`;
       return await fetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -360,11 +360,9 @@
       sendBtn.disabled = true;
 
       try {
-        // Önce gemini-1.5-flash modelini dene
         let response = await callGemini('gemini-1.5-flash', text);
         let data = await response.json();
 
-        // Eğer yoğunluk (high demand) hatası alınırsa gemini-1.5-pro modeline otomatik geç
         if (!response.ok) {
           response = await callGemini('gemini-1.5-pro', text);
           data = await response.json();
